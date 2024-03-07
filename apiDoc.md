@@ -50,7 +50,7 @@ Returns the information about the current user that is logged in.
 * Require Authentication: false
 * Request
   * Method: GET
-  * URL: /api/user
+  * URL: /api/users/current
   * Body: none
 
 * Successful Response when there is a logged in user
@@ -91,7 +91,7 @@ information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /api/user/login
+  * URL: /api/users/login
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -157,7 +157,7 @@ user's information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /api/user/signup
+  * URL: /api/users/signup
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -284,7 +284,7 @@ Returns all the groups.
 * Require Authentication: true
 * Request
   * Method: GET
-  * URL: /api/groups/users
+  * URL: /api/groups/current
   * Body: none
 
 * Successful Response
@@ -1384,7 +1384,7 @@ Request a new membership for a group specified by id.
 * Require Authentication: true
 * Request
   * Method: POST
-  * URL: /api/groups/:groupId/members/request
+  * URL: /api/groups/:groupId/members
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1601,7 +1601,7 @@ Returns the attendees of an event specified by its id.
 * Require Authentication: false
 * Request
   * Method: GET
-  * URL: /events/:eventId/attendance
+  * URL: /api/events/:eventId/attendees
   * Body: none
 
 * Successful Response: If you ARE the organizer of the group or a member of the
@@ -1694,7 +1694,7 @@ Request attendance for an event specified by id.
 * Require Authorization: Current User must be a member of the group
 * Request
   * Method: PUT
-  * URL: /api/events/:eventId/attendance/:memberId
+  * URL: /api/events/:eventId/attendees
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1909,7 +1909,7 @@ Delete an existing image for a Group.
   of the Group
 * Request
   * Method: DELETE
-  * URL: /api/group/:groupId/images/:imageId
+  * URL: /api/group/:groupId/groupImages/:imageId
   * Body: none
 
 * Successful Response
@@ -1945,7 +1945,7 @@ Delete an existing image for an Event.
   of the Group that the Event belongs to
 * Request
   * Method: DELETE
-  * URL: /api/events/:eventId/images/:imageId
+  * URL: /api/events/:eventId/eventImages/:imageId
   * Body: none
 
 * Successful Response
