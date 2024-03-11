@@ -2,7 +2,7 @@
 
 ## Database Schema Design
 
-![Alt text](./schema/schema-revised.png)
+![Alt text](./schema/schema-revised2.png)
 
 ## API Documentation
 
