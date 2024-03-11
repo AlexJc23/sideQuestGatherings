@@ -1539,7 +1539,7 @@ Delete a membership to a group specified by id.
   the user whose membership is being deleted
 * Request
   * Method: DELETE
-  * URL: /api/groups/:groupid/members/:memberId
+  * URL: /api/groups/:groupId/members/:memberId
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1693,7 +1693,7 @@ Request attendance for an event specified by id.
 * Require Authentication: true
 * Require Authorization: Current User must be a member of the group
 * Request
-  * Method: PUT
+  * Method: POST
   * URL: /api/events/:eventId/attendees
   * Headers:
     * Content-Type: application/json
@@ -1909,7 +1909,7 @@ Delete an existing image for a Group.
   of the Group
 * Request
   * Method: DELETE
-  * URL: /api/group/:groupId/groupImages/:imageId
+  * URL: /api/group-images/:imageId
   * Body: none
 
 * Successful Response
@@ -1945,7 +1945,7 @@ Delete an existing image for an Event.
   of the Group that the Event belongs to
 * Request
   * Method: DELETE
-  * URL: /api/events/:eventId/eventImages/:imageId
+  * URL: /api/event-images/:imageId
   * Body: none
 
 * Successful Response
