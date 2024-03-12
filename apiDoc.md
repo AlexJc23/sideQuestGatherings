@@ -1,4 +1,4 @@
-# `MEETUP CLONE - SIDEQUEST GATHERINGS`
+# `SIDEQUEST GATHERINGS`
 
 ## Database Schema Design
 
