@@ -12,6 +12,7 @@ const isProduction = environment === 'production';
 const app = express();
 const routes = require('./routes/index');
 
+const { ValidationError } = require('sequelize');
 
 
 app.use(morgan('dev'));
@@ -45,6 +46,47 @@ app.use(
 );
 
 app.use(routes);
+
+//resource not found error handler
+app.use((req, res, next) => {
+    const err = new Error("The requested resource couldn't be found.");
+    err.title = "resource Not Found";
+    err.errors = { message: "The requested resource couldn't be found." };
+    err.status = 404;
+    next(err);
+})
+
+//sequelize error-handler
+app.use((err, req, res, next) => {
+    if(err instanceof ValidationError) {
+        let errors = {};
+        for(let error of err.erros) {
+            errors[error.path] = error.message
+        }
+        err.title = 'Validation error';
+        err.errors = errors;
+    }
+    next(err)
+})
+
+//error formatter error-handler
+app.use((err, req, res, next) => {
+    res.status(err.status || 500);
+    console.error(err);
+    res.json({
+        title: err.title || 'Server Error',
+        message: err.message,
+        errors: err.errors,
+        stack: isProduction ? null : err.stack
+    });
+});
+
+
+
+
+
+
+
 
 
 

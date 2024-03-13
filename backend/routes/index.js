@@ -1,6 +1,11 @@
 const express = require('express');
 const router = express.Router();
 
+const apiRouter = require('./api');
+
+router.use('/api', apiRouter);
+
+
 // router.get('/hello/world', (req, res) => {
 //     //setting a cookie on the response with the name of XSRF-TOKEN
 //     res.cookie('XSRF-TOKEN', req.csrfToken());
