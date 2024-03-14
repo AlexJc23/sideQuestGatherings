@@ -7,6 +7,25 @@ const { User } = require('../../db/models');
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+    const { user } = req;
+    if(user) {
+        const safeUser = {
+            id: user.id,
+            email: user.email,
+            username: user.username,
+        };
+
+        return res.json({
+            user: safeUser
+        })
+    } else {
+        return res.json({
+            user: null
+        });
+    }
+});
+
 
 router.post('/', async (req, res, next) => {
     const { credential, password } = req.body;
@@ -45,6 +64,7 @@ router.delete('/', async (req, res) => {
         message: 'Success'
     });
 });
+
 
 
 
