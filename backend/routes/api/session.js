@@ -37,10 +37,14 @@ router.post('/', async (req, res, next) => {
     return res.json({
         user: safeUser
     });
+});
 
-}
-);
-
+router.delete('/', async (req, res) => {
+    res.clearCookie('token');
+    return res.json({
+        message: 'Success'
+    });
+});
 
 
 
