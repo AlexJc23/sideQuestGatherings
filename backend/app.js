@@ -60,7 +60,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     if(err instanceof ValidationError) {
         let errors = {};
-        for(let error of err.erros) {
+        for(let error of err.errors) {
             errors[error.path] = error.message
         }
         err.title = 'Validation error';
