@@ -31,6 +31,8 @@ router.get('/', async (req, res) => {
     if(user) {
         const safeUser = {
             id: user.id,
+            firtname: user.firstName,
+            lastname: user.lastName,
             email: user.email,
             username: user.username,
         };
