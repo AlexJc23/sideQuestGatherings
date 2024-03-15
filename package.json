@@ -1,0 +1,16 @@
+{
+  "name": "sidequest_gatherings_project",
+  "version": "1.0.0",
+  "description": "## Database Schema Design",
+  "main": "index.js",
+  "scripts": {
+    "install": "npm --prefix backend install backend",
+    "sequelize": "npm run --prefix backend sequelize",
+    "sequelize-cli": "npm run --prefix backend sequelize-cli",
+    "start": "npm start --prefix backend",
+    "build": "npm run --prefix backend build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
