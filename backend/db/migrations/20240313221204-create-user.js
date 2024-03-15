@@ -2,7 +2,7 @@
 
 let options = {};
 if(process.env.NODE_ENV === 'production') {
-  options.shema = process.env.SCHEMA;
+  options.schema = process.env.SCHEMA;
 };
 
 
