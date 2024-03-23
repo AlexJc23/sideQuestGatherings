@@ -1,6 +1,6 @@
 'use strict';
 
-const { Group, Sequelize } = require('../models');
+const { Event, Sequelize } = require('../models');
 const Op = Sequelize.Op;
 
 
@@ -9,7 +9,7 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-options.tableName = 'Groups';
+options.tableName = 'Events';
 options.validate = true;
 
 /** @type {import('sequelize-cli').Migration} */
@@ -24,36 +24,40 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   await Group.bulkCreate([
-    {
-      organizerId: 1,
-      name: 'Test1',
-      about: 'Test1',
-      type: 'Test1',
-      private: true,
-      city: 'Test',
-      state: 'OH'
-    },
-    {
-      organizerId: 1,
-      name: 'Test2',
-      about: 'Test2',
-      type: 'Test2',
-      private: false,
-      city: 'Test',
-      state: 'MI'
-    },
-    {
-      organizerId: 2,
-      name: 'Test3',
-      about: 'Test3',
-      type: 'Test3',
-      private: true,
-      city: 'Test',
-      state: 'TX'
-    },
-
-
+   await Event.bulkCreate([
+      {
+        groupId: 1,
+        venueId: 1,
+        name: 'Test1',
+        type: 'Test1',
+        capacity: 45,
+        price: 1.00,
+        description: 'TEST1',
+        startDate: '2024-06-11',
+        endDate: '2024-06-12',
+      },
+      {
+        groupId: 1,
+        venueId: 2,
+        name: 'Test2',
+        type: 'Test2',
+        capacity: 45,
+        price: 50.50,
+        description: 'TEST2',
+        startDate: '2024-06-09',
+        endDate: '2024-06-15',
+      },
+      {
+        groupId: 3,
+        venueId: 3,
+        name: 'Test3',
+        type: 'Test3',
+        capacity: 45,
+        price: 89.00,
+        description: 'TEST3',
+        startDate: '2024-06-11',
+        endDate: '2024-06-12',
+      },
    ], {validate: true})
   },
 
@@ -64,7 +68,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = 'Groups';
+    options.tableName = 'Events';
     return queryInterface.bulkDelete(options, {
       name: {[Op.in]: ['Test1', 'Test2', 'Test3']}
     }, {})

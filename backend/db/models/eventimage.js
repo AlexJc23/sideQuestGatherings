@@ -22,12 +22,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     imageUrl: {
       type: DataTypes.STRING,
-      validExtension(value) {
-        const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
-          if(!value.includes(validImageExtensions)) {
-            throw new Error(`File must be an extension of .jpg, .jpeg, .png or .gif `)
+      validate: {
+        validExtension(value) {
+          const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+          const fileExtension = value.substr(value.lastIndexOf('.')).toLowerCase();
+
+          if (!validImageExtensions.includes(fileExtension)) {
+            throw new Error(`File must have an extension of .jpg, .jpeg, .png, or .gif`);
           }
-      }
+        }
+      },
     },
     preview: {
       type: DataTypes.BOOLEAN,

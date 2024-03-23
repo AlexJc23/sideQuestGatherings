@@ -1,6 +1,7 @@
 'use strict';
 
-const { Membership, Sequelize } = require('../models');
+'use strict';
+const { EventImage, Sequelize } = require('../models');
 const Op = Sequelize.Op;
 
 
@@ -9,9 +10,8 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-options.tableName = 'Memberships';
+options.tableName = 'EventImages';
 options.validate = true;
-
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -25,33 +25,28 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   await Membership.bulkCreate([
-    {
-      groupId: 1,
-      userId: 3,
-      status: 'ADMIN'
-    },
-    {
-      groupId: 3,
-      userId: 1,
-      status: 'ADMIN'
-    },
-    {
-      groupId: 2,
-      userId: 3,
-      status: 'ADMIN'
-    },
-    {
-      groupId: 1,
-      userId: 3,
-      status: 'PENDING'
-    },
-    {
-      groupId: 3,
-      userId: 2,
-      status: 'MEMBER'
-    },
-   ], {validate: true})
+    await EventImage.bulkCreate([
+      {
+        eventId: 1,
+        imageUrl: 'testpic1.gif',
+        preview: true,
+      },
+      {
+        eventId: 1,
+        imageUrl: 'testpic2.png',
+        preview: true,
+      },
+      {
+        eventId: 3,
+        imageUrl: 'testpic3.gif',
+        preview: true,
+      },
+      {
+        eventId: 2,
+        imageUrl: 'testpic4.gif',
+        preview: false,
+      },
+    ], {validate: true})
   },
 
   async down (queryInterface, Sequelize) {
@@ -61,7 +56,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = 'Memberships';
+    options.tableName = 'EventImages';
     return queryInterface.bulkDelete(options, null, {})
   }
 };

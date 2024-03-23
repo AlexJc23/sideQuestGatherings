@@ -25,21 +25,21 @@ module.exports = {
     */
    await GroupImage.bulkCreate([
     {
-      groupId: 4,
+      groupId: 1,
       imageUrl: 'testpic1.png',
       preview: true
     },
     {
-      groupId: 4,
+      groupId: 1,
       imageUrl: 'testpic2.jpeg',
       preview: true
     },
     {
-      groupId: 6,
+      groupId: 3,
       imageUrl: 'testpic3.png',
       preview: true
     }
-   ])
+   ], {validate: true})
   },
 
   async down (queryInterface, Sequelize) {

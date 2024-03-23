@@ -1,6 +1,6 @@
 'use strict';
 
-const { Membership, Sequelize } = require('../models');
+const { Venue, Sequelize } = require('../models');
 const Op = Sequelize.Op;
 
 
@@ -9,9 +9,8 @@ let options = {};
 if (process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;  // define your schema in options object
 }
-options.tableName = 'Memberships';
+options.tableName = 'Venues';
 options.validate = true;
-
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -25,32 +24,31 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-   await Membership.bulkCreate([
+   await Venue.bulkCreate([
     {
       groupId: 1,
-      userId: 3,
-      status: 'ADMIN'
-    },
-    {
-      groupId: 3,
-      userId: 1,
-      status: 'ADMIN'
-    },
-    {
-      groupId: 2,
-      userId: 3,
-      status: 'ADMIN'
+      address: '123 Test Dr1',
+      city: 'Testcity',
+      state: 'MI',
+      latitude: 33.748550,
+      longitude: -84.391500
     },
     {
       groupId: 1,
-      userId: 3,
-      status: 'PENDING'
+      address: '123 Test Dr2',
+      city: 'Testcity',
+      state: 'MI',
+      latitude: 33.748550,
+      longitude: -84.391500
     },
     {
       groupId: 3,
-      userId: 2,
-      status: 'MEMBER'
-    },
+      address: '123 Test Dr2',
+      city: 'Testcity',
+      state: 'MI',
+      latitude: 33.748550,
+      longitude: -84.391500
+    }
    ], {validate: true})
   },
 
@@ -61,7 +59,7 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    options.tableName = 'Memberships';
+    options.tableName = 'Venues';
     return queryInterface.bulkDelete(options, null, {})
   }
 };

@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       );
 
       Event.hasMany(models.EventImage,
-        {foreignKey: eventId,
+        {foreignKey: 'eventId',
         onDelete: 'CASCADE',
         hooks: true
         }
@@ -36,11 +36,13 @@ module.exports = (sequelize, DataTypes) => {
   Event.init({
     groupId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+      references: {model: 'Groups'}
       },
     venueId: {
       type: DataTypes.INTEGER,
-      allowNull: false
+      allowNull: false,
+
       },
     name: {
       type: DataTypes.STRING,
@@ -64,6 +66,7 @@ module.exports = (sequelize, DataTypes) => {
     price: {
       type: DataTypes.DECIMAL,
       validate: {
+        isDecimal: true,
         isPriceFormat(value) {
           let regex = /^\d+(\.\d{1,2})?$/;
           if(!regex.test(value)) {
