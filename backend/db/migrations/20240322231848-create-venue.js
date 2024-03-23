@@ -1,5 +1,6 @@
 'use strict';
 
+
 let options = {};
 if(process.env.NODE_ENV === 'production') {
   options.schema = process.env.SCHEMA;
@@ -8,7 +9,7 @@ if(process.env.NODE_ENV === 'production') {
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Events', {
+    await queryInterface.createTable('Venues', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -17,38 +18,27 @@ module.exports = {
       },
       groupId: {
         type: Sequelize.INTEGER,
-        references: {model: 'Group'},
-        allowNull: false
+        allowNull: false,
+        references: {model: 'Group'}
       },
-      venueId: {
-        type: Sequelize.INTEGER,
-        references: {model: 'Venue'},
-        allowNull: false
-      },
-      name: {
-        type: Sequelize.STRING,
-      },
-      type: {
+      address: {
         type: Sequelize.STRING,
         allowNull: false
       },
-      capacity: {
-        type: Sequelize.INTEGER,
+      city: {
+        type: Sequelize.STRING,
         allowNull: false
-
       },
-      price: {
+      state: {
+        type: Sequelize.STRING,
+        allowNull: false
+      },
+      latitude: {
         type: Sequelize.DECIMAL,
-      },
-      description: {
-        type: Sequelize.STRING
-      },
-      startDate: {
-        type: Sequelize.DATE,
         allowNull: false
       },
-      endDate: {
-        type: Sequelize.DATE,
+      longitude: {
+        type: Sequelize.DECIMAL,
         allowNull: false
       },
       createdAt: {
@@ -64,7 +54,7 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    options.tableName = 'Events'
+    options.tableName = 'Venues'
     await queryInterface.dropTable(options);
   }
 };
