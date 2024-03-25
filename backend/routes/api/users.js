@@ -20,7 +20,7 @@ const validateSignup = [
         .isLength({ min: 4, max: 30})
         .withMessage('Please provide a username within 4 and 30 characters.')
         .custom(async (value) => {
-            const user = await User.findOne({ where: { username: value } });
+            const user = await User.findOne({ where: { userName: value } });
             if (user) {
                 throw new Error('Username already exists');
             }
