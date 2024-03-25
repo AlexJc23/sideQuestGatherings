@@ -91,7 +91,7 @@ information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /api/users/login
+  * URL: /api/session
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -157,7 +157,7 @@ user's information.
 * Require Authentication: false
 * Request
   * Method: POST
-  * URL: /api/users/signup
+  * URL: /api/users
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1384,7 +1384,7 @@ Request a new membership for a group specified by id.
 * Require Authentication: true
 * Request
   * Method: POST
-  * URL: /api/groups/:groupId/members
+  * URL: /api/groups/:groupId/membership
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1452,7 +1452,7 @@ Change the status of a membership for a group specified by id.
     * Current User must already be the organizer
 * Request
   * Method: PUT
-  * URL: /api/groups/:groupId/members/:memberId
+  * URL: /api/groups/:groupId/membership
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1539,7 +1539,7 @@ Delete a membership to a group specified by id.
   the user whose membership is being deleted
 * Request
   * Method: DELETE
-  * URL: /api/groups/:groupId/members/:memberId
+  * URL: /api/groups/:groupId/membership/:memberId
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1694,7 +1694,7 @@ Request attendance for an event specified by id.
 * Require Authorization: Current User must be a member of the group
 * Request
   * Method: POST
-  * URL: /api/events/:eventId/attendees
+  * URL: /api/events/:eventId/attendance
   * Headers:
     * Content-Type: application/json
   * Body: none
@@ -1758,7 +1758,7 @@ Change the status of an attendance for an event specified by id.
   have a membership to the group with the status of "co-host"
 * Request
   * Method: PUT
-  * URL: /api/events/:eventId/attendance/:userId
+  * URL: /api/events/:eventId/attendance
   * Headers:
     * Content-Type: application/json
   * Body:
@@ -1845,7 +1845,7 @@ Delete an attendance to an event specified by id.
   the user whose attendance is being deleted
 * Request
   * Method: DELETE
-  * URL: /API/events/:eventId/attendance/:userId
+  * URL: /api/events/:eventId/attendance/:userId
   * Headers:
     * Content-Type: application/json
   * Body: none
