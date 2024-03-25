@@ -17,12 +17,12 @@ module.exports = {
       },
       groupId: {
         type: Sequelize.INTEGER,
-        references: {model: 'Groups'},
+        references: {model: 'Group'},
         allowNull: false
       },
       venueId: {
         type: Sequelize.INTEGER,
-        references: {model: 'Venues'},
+        references: {model: 'Venue'},
         allowNull: false
       },
       name: {
