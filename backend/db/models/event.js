@@ -25,12 +25,6 @@ module.exports = (sequelize, DataTypes) => {
         hooks: true
         }
       );
-      Event.belongsToMany(models.Group,
-        {
-          through: models.Attendee,
-          foreignKey: 'eventId',
-          otherKey: 'userId',
-        })
     }
   }
   Event.init({
