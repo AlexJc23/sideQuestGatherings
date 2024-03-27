@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
           through: models.Membership,
           foreignKey: 'userId',
           otherKey: 'groupId',
+
         });
 
       User.belongsToMany(models.Event,
@@ -34,6 +35,9 @@ module.exports = (sequelize, DataTypes) => {
           foreignKey: 'userId',
           otherKey: 'eventId',
         });
+
+        })
+
     }
   }
   User.init({
