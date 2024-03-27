@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
-
+const groupRouter = require('./groups.js')
 const { setTokenCookie, restoreUser, requireAuth  } = require('../../utils/auth.js');
 
 const { User } = require('../../db/models')
@@ -12,6 +12,7 @@ const { User } = require('../../db/models')
   // If the current user session is not valid, set req.user to null
 router.use(restoreUser);
 
+router.use('/groups', groupRouter);
 router.use('/session', sessionRouter);
 router.use('/users', usersRouter)
 

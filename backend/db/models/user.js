@@ -26,7 +26,18 @@ module.exports = (sequelize, DataTypes) => {
           through: models.Membership,
           foreignKey: 'userId',
           otherKey: 'groupId',
+
+        });
+
+      User.belongsToMany(models.Event,
+        {
+          through: models.Attendee,
+          foreignKey: 'userId',
+          otherKey: 'eventId',
+        });
+
         })
+
     }
   }
   User.init({
@@ -44,7 +55,7 @@ module.exports = (sequelize, DataTypes) => {
         notEmpty: true
       }
     },
-    userName: {
+    username: {
       type:DataTypes.STRING,
       allowNull: false,
       unique: true,

@@ -14,14 +14,15 @@ module.exports = (sequelize, DataTypes) => {
         models.User,
         {foreignKey: 'organizerId'}
         );
-      Group.belongsToMany(
-        models.User,
-        {
-          through: models.Membership,
-          foreignKey: 'groupId',
-          otherKey: 'userId'
-        }
-      );
+
+        Group.belongsToMany(
+          models.User,
+          {
+            through: models.Membership,
+            foreignKey: 'groupId',
+            otherKey: 'userId'
+          }
+        );
 
       Group.hasMany(models.GroupImage, {
         foreignKey: 'groupId',
@@ -40,6 +41,8 @@ module.exports = (sequelize, DataTypes) => {
         onDelete: 'CASCADE',
         hooks: true
       });
+
+
     }
   }
   Group.init({

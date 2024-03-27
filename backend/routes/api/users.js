@@ -15,7 +15,7 @@ const validateSignup = [
     check('lastName')
         .exists({ checkFalsy: true })
         .withMessage('Please provide your last name.'),
-    check('userName')
+    check('username')
         .exists({ checkFalsy: true })
         .isLength({ min: 4, max: 30})
         .withMessage('Please provide a username within 4 and 30 characters.')
@@ -25,7 +25,7 @@ const validateSignup = [
                 throw new Error('Username already exists');
             }
         }),
-    check('userName')
+    check('username')
         .not()
         .isEmail()
         .withMessage('Username cannot be an email.'),
@@ -49,12 +49,12 @@ const validateSignup = [
 
 
 router.post('/', validateSignup, async (req, res) => {
-    const { firstName, lastName, userName, email, password } = req.body;
+    const { firstName, lastName, username, email, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password);
     const user = await User.create({
         firstName,
         lastName,
-        userName,
+        username,
         email,
         hashedPassword
     });
@@ -64,7 +64,7 @@ router.post('/', validateSignup, async (req, res) => {
         firtname: user.firstName,
         lastname: user.lastName,
         email: user.email,
-        username: user.userName
+        username: user.username
     };
 
     await setTokenCookie(res, safeUser)

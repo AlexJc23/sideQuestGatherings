@@ -32,11 +32,16 @@ module.exports = {
     {
       groupId: 1,
       imageUrl: 'testpic2.jpeg',
-      preview: true
+      preview: false
     },
     {
       groupId: 3,
       imageUrl: 'testpic3.png',
+      preview: true
+    },
+    {
+      groupId: 2,
+      imageUrl: 'testpic4.png',
       preview: true
     }
    ], {validate: true})

@@ -19,14 +19,17 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      groupId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
       userId: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        references: {model: 'Users', key: 'id'}
       },
+      groupId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: {model: 'Groups', key: 'id'}
+      },
+
       status: {
         type: Sequelize.STRING,
         allowNull: false

@@ -10,26 +10,31 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+
       Membership.belongsTo(models.User,
+
+        {foreignKey: 'userId'});
+
+
         {
-          foreignKey: 'UserId'
+          foreignKey: 'userId'
         });
+
       Membership.belongsTo(models.Group,
-        {
-          foreignKey: 'groupId'
-        })
+        {foreignKey: 'groupId'});
+
     }
   }
   Membership.init({
-    groupId: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      references: {model: 'Groups'}
-    },
     userId: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      // allowNull: false,
       references: {model: 'Users'}
+    },
+    groupId: {
+      type: DataTypes.INTEGER,
+      // allowNull: false,
+      references: {model: 'Groups'}
     },
     status: {
       type: DataTypes.STRING,
@@ -37,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isUppercase: true,
         status(value) {
-          if(value.toUpperCase() !== 'PENDING' && value.toUpperCase() !== 'MEMBER' && value.toUpperCase() !== 'ADMIN') {
+          if(value.toUpperCase() !== 'PENDING' && value.toUpperCase() !== 'MEMBER' && value.toUpperCase() !== 'ADMIN' && value.toUpperCase() !== 'OWNER') {
             throw new Error(`Status must be pending, member or admin.`)
           }
         }
