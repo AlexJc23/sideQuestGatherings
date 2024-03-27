@@ -36,7 +36,6 @@ module.exports = (sequelize, DataTypes) => {
           otherKey: 'eventId',
         });
 
-        })
 
     }
   }
