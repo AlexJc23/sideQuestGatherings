@@ -49,8 +49,8 @@ router.get('/', async (req, res) => {
 
 router.get('/current', async (req, res) => {
     // Extract the userId from the current user
-    const userId = req.user.id;
-
+    try {const userId = req.user.id;
+    // if(req.user === null) return res.json({message: 'Please Log in before proceeding.'});
     // Find all groups that the current user is a member of
     const userGroups = await Membership.findAll({
         where: {
@@ -103,7 +103,10 @@ router.get('/current', async (req, res) => {
     }
 
 
-    return res.json({ groups: groupData });
+    return res.json({ groups: groupData });}
+    catch(err) {
+        return res.json({message: 'You must be signed in to view your groups.'})
+    }
 
 });
 
@@ -143,5 +146,8 @@ router.get('/:groupId', async (req, res) => {
     res.json(groupData)}
 });
 
+router.post('/', async (req, res) => {
+    
+})
 
 module.exports = router;
