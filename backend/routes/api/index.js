@@ -2,9 +2,9 @@ const router = require('express').Router();
 const sessionRouter = require('./session.js');
 const usersRouter = require('./users.js');
 const groupRouter = require('./groups.js')
-const { setTokenCookie, restoreUser, requireAuth  } = require('../../utils/auth.js');
+const { restoreUser } = require('../../utils/auth.js');
 
-const { User } = require('../../db/models')
+
 
 
 // Connect restoreUser middleware to the API router

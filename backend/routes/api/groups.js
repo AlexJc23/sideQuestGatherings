@@ -1,21 +1,54 @@
+
 const express = require('express');
 const bcrypt = require('bcryptjs');
-
-const { setTokenCookie, requireAuth } = require('../../utils/auth.js');
-const {Group, Membership, GroupImage, User, Venue } = require('../../db/models');
-const { Op, Sequelize } = require('sequelize')
-
-
+const { Op } = require('sequelize');
+const { setTokenCookie, requireAuth } = require('../../utils/auth');
+const { User, Group, Event, Venue, Membership, GroupImage } = require('../../db/models');
 const { check } = require('express-validator');
+
+// const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation.js')
 const router = express.Router();
+
+const validateGroupCreation = [
+    check('name')
+        .exists({checkFalsy: true})
+        .isLength({min: 5, max: 60})
+        .withMessage("Name must be 60 characters or less"),
+    check('about')
+        .exists({checkFalsy: true})
+        .isLength({min: 50})
+        .withMessage('About must be 50 characters or more'),
+    check('type')
+        .exists({checkFalsy: true})
+        .custom(value => {
+            const values = ['Online', 'In person']
+            if (!values.includes(value)) {
+                throw new Error("Type must be 'Online' or 'In person'");
+            }
+            return true;
+        }),
+    check('private')
+        .exists()
+        .isBoolean()
+        .withMessage( "Private must be a boolean"),
+    check('city')
+        .exists({checkFalsy: true})
+        .withMessage("City is required"),
+    check('state')
+        .exists({checkFalsy: true})
+        .isLength({min: 2})
+        .withMessage("State is required"),
+    handleValidationErrors
+]
 
 router.get('/', async (req, res) => {
 
     const allGroups = await Group.findAll({include: [
         {model: GroupImage,
         attributes: ['imageUrl'],
-        where: {preview: true},}
+        order: [['preview', 'DESC']]
+    }
     ]});
     const groupData = [];
 
@@ -47,10 +80,11 @@ router.get('/', async (req, res) => {
     return res.json({ groups: groupData });
 });
 
-router.get('/current', async (req, res) => {
+router.get('/current', requireAuth, async (req, res, next) => {
     // Extract the userId from the current user
-    try {const userId = req.user.id;
-    // if(req.user === null) return res.json({message: 'Please Log in before proceeding.'});
+
+    const userId = req.user.id;
+
     // Find all groups that the current user is a member of
     const userGroups = await Membership.findAll({
         where: {
@@ -64,7 +98,7 @@ router.get('/current', async (req, res) => {
                     {
                         model: GroupImage,
                         attributes: ['imageUrl'],
-                        where: { preview: true }
+                        order: [['preview', 'DESC']]
                     }
                 ]
             }
@@ -103,10 +137,7 @@ router.get('/current', async (req, res) => {
     }
 
 
-    return res.json({ groups: groupData });}
-    catch(err) {
-        return res.json({message: 'You must be signed in to view your groups.'})
-    }
+    return res.send({ groups: groupData });
 
 });
 
@@ -146,8 +177,110 @@ router.get('/:groupId', async (req, res) => {
     res.json(groupData)}
 });
 
-router.post('/', async (req, res) => {
-    
-})
+router.post('/', validateGroupCreation, requireAuth, async (req, res) => {
+    const {name, about, type, private, city, state} = req.body;
+    const userId = req.user.id;
+
+    const newGroup = await Group.create({
+        organizerId: userId,
+        name: name,
+        about: about,
+        type: type,
+        private: private,
+        city: city,
+        state: state
+    });
+
+    const newMembership = await Membership.create({
+        userId: userId,
+        groupId: newGroup.id,
+        status: 'OWNER'
+    })
+
+    res.json(newGroup)
+});
+
+
+router.post('/:groupId/images',  requireAuth, async (req, res, next) => {
+    //grab the queries for creating a new image
+    const { url, preview } = req.body;
+    const userId = req.user.id;
+    const { groupId } = req.params;
+
+
+    const group = await Group.findByPk(parseInt(groupId));
+    if (!group) return res.json({ message: `Group couldn't be found` });
+
+    if (group.organizerId === userId) {
+        const newImage = await GroupImage.create({
+            groupId: group.id,
+            imageUrl: url,
+            preview: preview
+        });
+
+    const image = await GroupImage.findByPk(newImage.id)
+
+        return res.json(image);
+    } else {
+        return res.status(403).json({ message: "You are not authorized to perform this action" });
+    }
+});
+
+router.put('/:groupId', requireAuth, validateGroupCreation, async (req, res, next) => {
+    const userId = req.user.id;
+    const groupId = req.params.groupId;
+    const { name, about, type, private, city, state } = req.body;
+
+    const groupById = await Group.findByPk(parseInt(groupId));
+
+    if (!groupById) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+    }
+
+    if (groupById.organizerId === userId) {
+        try {
+            groupById.set({
+                name,
+                about,
+                type,
+                private,
+                city,
+                state
+            });
+
+            // Saving changes to the database
+            await groupById.save();
+            return res.json(groupById);
+        } catch (error) {
+            // Handling any database save error
+            return next(error);
+        }
+    } else {
+        return res.status(403).json({ message: "You are not authorized to perform this action" });
+    }
+});
+
+router.delete('/:groupId', requireAuth, async (req, res, next) => {
+    const userId = req.user.id;
+    const groupId = req.params.groupId;
+
+    const groupById = await Group.findByPk(parseInt(groupId));
+    const membership = await Membership.findOne({where: {
+        userId: userId,
+        groupId: groupId
+    }});
+    if (!groupById) {
+        return res.status(404).json({ message: "Group couldn't be found" });
+    }
+
+    if (groupById.organizerId === userId) {
+        await membership.destroy();
+        await groupById.destroy();
+        res.json({message: "Successfully deleted"})
+    } else {
+        return res.status(403).json({ message: "You are not authorized to perform this action" });
+    }
+
+});
 
 module.exports = router;
