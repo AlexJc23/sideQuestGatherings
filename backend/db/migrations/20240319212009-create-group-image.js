@@ -26,7 +26,6 @@ module.exports = {
       },
       preview: {
         type: Sequelize.BOOLEAN,
-        allowNull: false
       },
       createdAt: {
         allowNull: false,
@@ -42,6 +41,6 @@ module.exports = {
   },
   async down(queryInterface, Sequelize) {
     options.tableName = 'GroupImages'
-    await queryInterface.dropTable(options);
+    return queryInterface.dropTable(options);
   }
 };

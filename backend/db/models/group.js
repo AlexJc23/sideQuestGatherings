@@ -55,12 +55,12 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         notEmpty: true,
-        len: [5, 50]
+        len: [5, 60]
       }
     },
     about: {
       type: DataTypes.STRING,
-      allowNull: false,
+      allowNull: false
     },
     type: {
       type: DataTypes.STRING,
@@ -68,23 +68,16 @@ module.exports = (sequelize, DataTypes) => {
     },
     private: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
+      allowNull: false,
+
     },
     city: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isAlpha: true
-      }
     },
     state: {
       type: DataTypes.STRING,
       allowNull: false,
-      validate: {
-        isUppercase: true,
-        len: [2, 2],
-        isAlpha: true
-      }
     }
   }, {
     sequelize,
