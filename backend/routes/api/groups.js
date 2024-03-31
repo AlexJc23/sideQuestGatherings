@@ -40,8 +40,30 @@ const validateGroupCreation = [
         .isLength({min: 2})
         .withMessage("State is required"),
     handleValidationErrors
-]
+];
 
+const validateVenueCreation = [
+    check('address')
+        .exists({checkFalsy: true})
+        .isLength({min: 5, max: 255})
+        .withMessage("Street address is required"),
+    check('city')
+        .exists({checkFalsy: true})
+        .withMessage('City is required'),
+    check('state')
+        .exists({checkFalsy: true})
+        .isLength({min: 2})
+        .withMessage("State is required"),
+    check('lat')
+        .exists()
+        .isFloat({ min: -90, max: 90 })
+        .withMessage( "Latitude must be within -90 and 90"),
+    check('lng')
+        .exists()
+        .isFloat({ min: -180, max: 180 })
+        .withMessage("Longitude must be within -180 and 180"),
+    handleValidationErrors
+];
 router.get('/', async (req, res) => {
 
     const allGroups = await Group.findAll({include: [
@@ -282,5 +304,55 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
     }
 
 });
+
+router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
+    const groupId = req.params.groupId;
+    const currentUser = req.user;
+
+    const group = await Group.findByPk(parseInt(groupId));
+    if(!group) return res.status(404).json({message: "Group couldn't be found"})
+
+    const member = await Membership.findByPk(parseInt(currentUser.id), {where: {
+        groupId: groupId, userId: currentUser.id
+    }});
+
+
+        if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST') && group.organizerId === currentUser.id) {
+            const venues = await Venue.findAll( {
+                where: {groupId: groupId}
+            })
+            res.json({Venues: venues})
+        } else {
+            return res.status(403).json({message: "You are not authorized to perform this action"})
+        }
+    }
+);
+
+router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, res, next) => {
+    const groupId = req.params.groupId;
+    const currentUser = req.user;
+    const {address, city, state, lat, lng} = req.body;
+    const group = await Group.findByPk(parseInt(groupId));
+    if(!group) return res.status(404).json({message: "Group couldn't be found"})
+
+    const member = await Membership.findByPk(parseInt(currentUser.id), {where: {
+        groupId: groupId, userId: currentUser.id
+    }});
+
+    if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST') && group.organizerId === currentUser.id) {
+        const newVenue = await Venue.create( {
+            groupId: groupId,
+            address: address,
+            city: city,
+            state: state,
+            latitude: lat,
+            longitude: lng
+        });
+        return res.json(newVenue)
+    } else {
+        return res.status(403).json({message: "You are not authorized to perform this action"})
+    }
+});
+
 
 module.exports = router;

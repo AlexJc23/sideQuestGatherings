@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       validate: {
         isUppercase: true,
         status(value) {
-          if(value.toUpperCase() !== 'PENDING' && value.toUpperCase() !== 'MEMBER' && value.toUpperCase() !== 'ADMIN' && value.toUpperCase() !== 'OWNER') {
+          if(value.toUpperCase() !== 'PENDING' && value.toUpperCase() !== 'MEMBER' && value.toUpperCase() !== 'CO-HOST' && value.toUpperCase() !== 'OWNER') {
             throw new Error(`Status must be pending, member or admin.`)
           }
         }
