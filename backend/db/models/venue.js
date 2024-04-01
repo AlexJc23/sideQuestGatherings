@@ -38,7 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       type:DataTypes.STRING,
       allowNull: false,
       validate: {
-        isAlpha: true
+        notEmpty: true
       }
     },
     state: {
@@ -46,8 +46,6 @@ module.exports = (sequelize, DataTypes) => {
       allowNull: false,
       validate: {
         len: [2,2],
-        isAlpha: true,
-        isUppercase: true
       }
     },
     latitude: {
@@ -71,6 +69,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Venue',
+    defaultScope: {
+      attributes: {
+        exclude: [ 'createdAt', 'updatedAt' ]
+      }
+    }
   });
   return Venue;
 };
