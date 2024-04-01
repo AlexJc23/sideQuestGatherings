@@ -18,6 +18,12 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'venueId'
         }
       );
+      Event.belongsToMany(models.User,
+        {
+          through: models.Attendee,
+          foreignKey: 'eventId',
+          otherKey: 'userId'
+        });
 
       Event.hasMany(models.EventImage,
         {foreignKey: 'eventId',
@@ -42,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        len: [4, 30]
+        len: [5]
       }
       },
     type: {
@@ -108,6 +114,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Event',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt', 'updatedAt' ]
+      }
+    }
   });
   return Event;
 };

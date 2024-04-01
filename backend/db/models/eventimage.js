@@ -24,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       validate: {
         validExtension(value) {
-          const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif'];
+          const validImageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.url'];
           const fileExtension = value.substr(value.lastIndexOf('.')).toLowerCase();
 
           if (!validImageExtensions.includes(fileExtension)) {
@@ -35,11 +35,15 @@ module.exports = (sequelize, DataTypes) => {
     },
     preview: {
       type: DataTypes.BOOLEAN,
-      allowNull: false
     }
   }, {
     sequelize,
     modelName: 'EventImage',
+    defaultScope: {
+      attributes: {
+        exclude: [ 'eventId', 'createdAt', 'updatedAt' ]
+      }
+    }
   });
   return EventImage;
 };
