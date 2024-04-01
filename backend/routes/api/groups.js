@@ -148,7 +148,7 @@ router.get('/:groupId', async (req, res) => {
     res.json(groupData)}
 });
 
-router.post('/', validateGroupCreation, requireAuth, async (req, res) => {
+router.post('/', requireAuth, validateGroupCreation,  async (req, res) => {
     const {name, about, type, private, city, state} = req.body;
     const userId = req.user.id;
 
