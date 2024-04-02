@@ -106,9 +106,30 @@ const validateEventCreation = [
     handleValidationErrors
 ];
 
+const validateMemberCreation = [
+    check('status')
+        .exists()
+        .custom(value => {
+            // Check if the status is either "co-host" or "member"
+            if (value !== 'co-host' && value !== 'member') {
+                throw new Error('Status must be either co-host or member');
+            }
+            return true; // Indicates the validation succeeded
+        })
+        .custom(value => {
+            // Check if the status is not "pending"
+            if (value === 'pending') {
+                throw new Error("Cannot change a membership status to pending");
+            }
+            return true; // Indicates the validation succeeded
+        }),
+        handleValidationErrors
+];
+
 module.exports =
 {
   validateVenueCreation,
   validateGroupCreation,
-  validateEventCreation
+  validateEventCreation,
+  validateMemberCreation
 }

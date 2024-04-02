@@ -36,7 +36,7 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false,
       validate: {
-        isUppercase: true,
+        isLowercase: true,
         status(value) {
           if(value.toUpperCase() !== 'PENDING' && value.toUpperCase() !== 'MEMBER' && value.toUpperCase() !== 'CO-HOST' && value.toUpperCase() !== 'OWNER') {
             throw new Error(`Status must be pending, member or admin.`)
@@ -47,6 +47,11 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Membership',
+    defaultScope: {
+      attributes: {
+        exclude: [ 'createdAt', 'updatedAt' ]
+      }
+    }
   });
   return Membership;
 };
