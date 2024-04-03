@@ -1,5 +1,6 @@
 const { handleValidationErrors } = require('./validation.js')
 const { check } = require('express-validator');
+const { User, Group, Event, Venue, Membership, GroupImage, EventImage,Attendee } = require('../db/models');
 
 const validateSignup = [
     check('firstName')
@@ -178,6 +179,33 @@ const validateAttendanceStatus = [
         handleValidationErrors
 ];
 
+const validateQueries = [
+    check('page')
+        .optional()
+        .isInt({ min: 1, max: 10 })
+        .default(1)
+        .withMessage('Page must be greater than or equal to 1 or less than or equal to 10'),
+    check('size')
+        .optional()
+        .isInt({min: 1, max: 20})
+        .default(20)
+        .withMessage("Size must be greater than or equal to 1 and less than or equal to 20"),
+    check('name')
+        .optional()
+        .isString()
+        .withMessage('Name must be a string'),
+    check('type')
+        .optional()
+        .isIn(['Online', 'In Person'])
+        .withMessage("Type must be 'Online' or 'In Person'"),
+    check('startDate')
+        .optional()
+        .isISO8601()
+
+        .withMessage('"Start date must be a valid datetime"'),
+    handleValidationErrors
+];
+
 module.exports =
 {
   validateSignup,
@@ -185,5 +213,6 @@ module.exports =
   validateGroupCreation,
   validateEventCreation,
   validateMemberCreation,
-  validateAttendanceStatus
+  validateAttendanceStatus,
+  validateQueries
 }
