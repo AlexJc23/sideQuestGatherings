@@ -60,7 +60,7 @@ module.exports = {
      */
     options.tableName = 'Users';
     return queryInterface.bulkDelete(options, {
-      userName: {[Op.in]: ['TestUser1', 'TestUser2', 'TestUser3']}
+      username: {[Op.in]: ['TestUser1', 'TestUser2', 'TestUser3']}
     }, {})
   }
 };
