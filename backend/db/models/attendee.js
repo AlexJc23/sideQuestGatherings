@@ -37,8 +37,8 @@ module.exports = (sequelize, DataTypes) => {
     validate: {
       status(value) {
 
-        if(!value.toLowerCase() === 'attending' && value.toLowerCase() !== 'not going') {
-          throw new Error('Status can only bet set Attending or not going.')
+        if(!value.toLowerCase() === 'attending' && value.toLowerCase() !== 'pending' && value.toLowerCase() !== 'waitlist') {
+          throw new Error('Status can only bet set Attending, pending or waitlist.')
         }
       }
     }
