@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
     for (const group of allGroups) {
         const memberCount = await Membership.count({
             where: {
-                groupid: group.id
+                groupId: group.id
             }
 
         });
@@ -87,7 +87,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
         // COUNT the number of members for the current group
         const memberCount = await Membership.count({
             where: {
-                groupid: group.id
+                groupId: group.id
             }
         });
 
@@ -127,7 +127,7 @@ router.get('/:groupId', async (req, res) => {
         ]})
     const memberCount = await Membership.count({
         where: {
-            groupid: groupById.id
+            groupId: groupById.id
         }
     });
 
