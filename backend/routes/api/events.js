@@ -5,15 +5,41 @@ const { Op } = require('sequelize');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Group, Event, Venue, Attendee, GroupImage, EventImage, Membership } = require('../../db/models');
 
-const { validateEventCreation, validateAttendanceStatus } = require('../../utils/validateChecks')
+const { validateEventCreation, validateAttendanceStatus, validateQueries } = require('../../utils/validateChecks')
 
 
 const router = express.Router();
 
 
-router.get('/', async (req, res) => {
+router.get('/', validateQueries, async (req, res) => {
+    let { page, size, name, type, startDate } = req.query;
+
     const allEvents = [];
-    const events = await Event.findAll({
+
+    page = Number(page);
+    size = Number(size);
+
+    if (isNaN(page) || page < 1 || page > 10) page = 1;
+    if (isNaN(size) || size < 1 || size > 20) size = 20;
+
+    const where = {};
+    const pagination = {};
+    pagination.limit = size;
+    pagination.offset = size * (page - 1);
+
+    if(name && name !== " ") {
+        where.name = name
+    };
+
+    if(type) {
+        where.type = type
+    };
+
+    if(startDate) {
+        where.startDate = startDate
+    };
+
+    const events = await Event.findAll({where,
         include: [
 
             {model: EventImage,
@@ -26,8 +52,11 @@ router.get('/', async (req, res) => {
             {model: Venue,
             attributes: ['id', 'city', 'state']
             }
-        ]
+        ],
+        ...pagination
     });
+
+
     for (const event of events) {
         const attending = await Attendee.count({
             where: {
@@ -50,6 +79,7 @@ router.get('/', async (req, res) => {
             Venue: event.Venue
         });
     }
+
         return res.json({Events: allEvents})
 });
 
@@ -335,8 +365,6 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
     } else {
         return res.status(403).json({message: "Forbidden"})
     }
-
-
 });
 
 
