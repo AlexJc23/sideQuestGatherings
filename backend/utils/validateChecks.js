@@ -126,10 +126,24 @@ const validateMemberCreation = [
         handleValidationErrors
 ];
 
+const validateAttendanceStatus = [
+    check('status')
+        .exists()
+        .custom(value => {
+            // Check if the status is not "pending"
+            if (value === 'pending') {
+                throw new Error("Cannot change an attendance status to pending");
+            }
+            return true; // Indicates the validation succeeded
+        }),
+        handleValidationErrors
+];
+
 module.exports =
 {
   validateVenueCreation,
   validateGroupCreation,
   validateEventCreation,
-  validateMemberCreation
+  validateMemberCreation,
+  validateAttendanceStatus
 }
