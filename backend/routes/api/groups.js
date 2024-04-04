@@ -194,7 +194,7 @@ router.post('/:groupId/images',  requireAuth, async (req, res, next) => {
 
         return res.json(image);
     } else {
-        return res.status(403).json({ message: "You are not authorized to perform this action" });
+        return res.status(403).json({ message: "Forbidden" });
     }
 });
 
@@ -228,7 +228,7 @@ router.put('/:groupId', requireAuth, validateGroupCreation, async (req, res, nex
             return next(error);
         }
     } else {
-        return res.status(403).json({ message: "You are not authorized to perform this action" });
+        return res.status(403).json({ message: "Forbidden" });
     }
 });
 
@@ -250,7 +250,7 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
         await groupById.destroy();
         res.json({message: "Successfully deleted"})
     } else {
-        return res.status(403).json({ message: "You are not authorized to perform this action" });
+        return res.status(403).json({ message: "Forbidden" });
     }
 
 });
@@ -273,7 +273,7 @@ router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
             })
             res.json({Venues: venues})
         } else {
-            return res.status(403).json({message: "You are not authorized to perform this action"})
+            return res.status(403).json({message: "Forbidden"})
         }
     }
 );
@@ -300,7 +300,7 @@ router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, 
         });
         return res.json(newVenue)
     } else {
-        return res.status(403).json({message: "You are not authorized to perform this action"})
+        return res.status(403).json({message: "Forbidden"})
     }
 });
 router.get('/:groupId/events', async (req, res) => {

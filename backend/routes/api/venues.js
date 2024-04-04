@@ -38,7 +38,7 @@ router.put('/:venueId', requireAuth, validateVenueCreation, async (req, res, nex
         venueById.save()
         return res.json(venueById)
     } else {
-        return res.status(403).json({message: "You are not authorized to perform this action"})
+        return res.status(403).json({message: "Forbidden"})
     }
 })
 
