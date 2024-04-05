@@ -94,10 +94,10 @@ router.get('/:eventId', async (req, res) => {
                 attributes: ['id', 'imageUrl', 'preview'],
             },
             {model: Group,
-                attributes: ['id', 'name', 'city', 'state']
+                attributes: ['id', 'name', 'private','city', 'state']
             },
             {model: Venue,
-            attributes: ['id', 'city', 'state']
+            attributes: {exclude: ['groupId', 'createdAt', 'updatedAt']}
             }
         ]
     });
@@ -115,13 +115,23 @@ router.get('/:eventId', async (req, res) => {
             groupId: events.groupId,
             venueId: events.venueId,
             name: events.name,
+            description: events.description,
             type: events.type,
+            capacity: events.capacity,
+            price: events.price,
             startDate: events.startDate,
             endDate: events.endDate,
             numAttending: attending,
             Group: events.Group,
-            Venue: events.Venue,
-            previewImage: events.EventImages
+            Venue: {
+                id: events.Venue.id,
+                address: events.Venue.address,
+                city: events.Venue.city,
+                state: events.Venue.state,
+                lat: events.Venue.latitude,
+                lng: events.Venue.longitude
+            },
+            EventImages: events.EventImages
         };
     // }
         return res.json(eventByPk)
@@ -140,6 +150,7 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
     const member = await Membership.findOne({where: {
             groupId: event.groupId, userId: currentUser.id
         }});
+    if(!member) return res.status(403).json({message:'Forbidden'})
 
     const attendee = await Attendee.findOne({where: {
         userId: currentUser.id,
@@ -167,7 +178,7 @@ router.put('/:eventId', requireAuth, validateEventCreation, async (req, res) => 
 
     const { venueId, name, type, capacity, price, description, startDate, endDate} = req.body;
 
-    const eventToUpdate = await Event.findByPk(parseInt(eventId), {attributes: { exclude: ['updatedAt', 'createdAt'] }});
+    const eventToUpdate = await Event.findByPk(parseInt(eventId));
     if(!eventToUpdate) return res.status(404).json({message: "Event couldn't be found"})
 
     const venue = await Venue.findByPk(parseInt(venueId));
@@ -177,6 +188,7 @@ router.put('/:eventId', requireAuth, validateEventCreation, async (req, res) => 
     const member = await Membership.findOne({where: {
         groupId: eventToUpdate.groupId, userId: currentUser.id
     }});
+    if(!member) return res.status(403).json({message:'Forbidden'});
 
      eventToUpdate.set({
         venueId: venueId,
@@ -191,7 +203,10 @@ router.put('/:eventId', requireAuth, validateEventCreation, async (req, res) => 
 
     if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST')) {
     eventToUpdate.save()
-    return res.json(eventToUpdate);
+
+    const confirmedEvent = await Event.findByPk(eventToUpdate.id)
+
+    return res.json(confirmedEvent);
     } else {
         res.status(403).json({message: "Forbidden"})
     }
@@ -209,6 +224,8 @@ router.delete('/:eventId', requireAuth, async (req, res) => {
     const member = await Membership.findOne({where: {
         groupId: event.groupId, userId: currentUser.id
     }});
+
+    if(!member) return res.status(403).json({message:'Forbidden'});
 
     if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST')) {
             event.destroy()
@@ -282,12 +299,10 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     if(!event) return res.status(404).json({message: "Event couldn't be found"})
 
     const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}})
-
     const attending = await Attendee.findOne({where: {userId: memberId, eventId: eventId}});
+    // return res.json(currentUser)
+    if(!currentUser) return res.status(403).json({message: "Forbidden"});
 
-    if(attending.status.toLowerCase() === 'pending') return res.status(404).json({message: "Attendance has already been requested"});
-
-    if(attending.status.toLowerCase() === 'attending') return res.status(404).json({message: "User is already an attendee of the event"});
 
 
     if(!attending && currentUser) {
@@ -300,8 +315,10 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
         return res.status(200).json({
             userId: newAttendy.userId,
             status: newAttendy.status
-          });
+        });
     }
+    if(attending.status.toLowerCase() === 'pending') return res.status(400).json({message: "Attendance has already been requested"});
+    if(attending.status.toLowerCase() === 'attending') return res.status(400).json({message: "User is already an attendee of the event"});
 
 });
 router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async (req, res) => {
@@ -335,7 +352,7 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
     return res.json({
         id:  attending.id,
         eventId: attending.eventId,
-        memberId: attending.userId,
+        userId: attending.userId,
         status: attending.status
     });
 
@@ -353,13 +370,13 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
 
     const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
     if(!currentUser) return res.status(404).json({message: "User coundn't be found"});
-
     const attending = await Attendee.findOne({where: {userId: userId, eventId: eventId}});
+    // return res.json(currentUser.status)
 
     if(!attending) return res.status(404).json({message: "Attendance between the user and the event does not exist"});
 
 
-    if(currentUser.status.toLowerCase() === 'owner' || currentUser.userId === Number(memberId)) {
+    if((currentUser.status.toLowerCase() === 'owner' || currentUser.status.toLowerCase() === 'co-host') || currentUser.userId === Number(memberId)) {
         attending.destroy();
         return res.status(200).json({message: "Successfully deleted attendance from event"})
     } else {

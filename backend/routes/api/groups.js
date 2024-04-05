@@ -119,7 +119,7 @@ router.get('/:groupId', async (req, res) => {
     if(!groupById) {
         res.status(404).json({message:"Group couldn't be found"})
 
-    }else {  groupById = await Group.findByPk(parseInt(groupId), {
+    }else {  groupById = await Group.unscoped().findByPk(parseInt(groupId), {
         include: [
             {model: GroupImage},
             {model: User, attributes: ['id', 'firstName', 'lastName']},
@@ -137,6 +137,7 @@ router.get('/:groupId', async (req, res) => {
         name: groupById.name,
         about: groupById.about,
         type: groupById.type,
+        private: groupById.private,
         city: groupById.city,
         state: groupById.state,
         createdAt: groupById.createdAt,
@@ -181,7 +182,7 @@ router.post('/:groupId/images',  requireAuth, async (req, res, next) => {
 
 
     const group = await Group.findByPk(parseInt(groupId));
-    if (!group) return res.json({ message: `Group couldn't be found` });
+    if (!group) return res.status(404).json({ message: `Group couldn't be found` });
 
     if (group.organizerId === userId) {
         const newImage = await GroupImage.create({
@@ -203,7 +204,7 @@ router.put('/:groupId', requireAuth, validateGroupCreation, async (req, res, nex
     const groupId = req.params.groupId;
     const { name, about, type, private, city, state } = req.body;
 
-    const groupById = await Group.findByPk(parseInt(groupId));
+    const groupById = await Group.unscoped().findByPk(parseInt(groupId));
 
     if (!groupById) {
         return res.status(404).json({ message: "Group couldn't be found" });
@@ -218,6 +219,7 @@ router.put('/:groupId', requireAuth, validateGroupCreation, async (req, res, nex
                 private,
                 city,
                 state
+
             });
 
             // Saving changes to the database
@@ -290,7 +292,7 @@ router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, 
     }});
 
     if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST') && group.organizerId === currentUser.id) {
-        const newVenue = await Venue.create( {
+        const newVenue = await Venue.unscoped().create( {
             groupId: groupId,
             address: address,
             city: city,
@@ -298,7 +300,11 @@ router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, 
             latitude: lat,
             longitude: lng
         });
-        return res.json(newVenue)
+
+        const confirmedVenue = await Venue.findByPk(newVenue.id);
+
+
+        return res.json(confirmedVenue)
     } else {
         return res.status(403).json({message: "Forbidden"})
     }
@@ -368,6 +374,7 @@ router.post('/:groupId/events', requireAuth, validateEventCreation, async (req, 
     const member = await Membership.findOne({where: {
         groupId: groupId, userId: currentUser.id
     }});
+    if(!member) return res.status(403).json({message: 'Forbidden'});
 
     if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST')) {
     const newEvent = await Event.create({
@@ -410,7 +417,7 @@ router.get('/:groupId/members', async (req, res) => {
     });
 
     let members;
-    if (!currentMember || currentMember.status.toUpperCase() === 'PENDING') {
+    if (!currentMember || currentMember.status.toUpperCase() === 'PENDING' || currentMember.status.toUpperCase() === 'MEMBER') {
         // If current user is not a member yet or is pending, return all non-pending members
         members = await Membership.findAll({
             where: {
@@ -501,17 +508,19 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
     const group = await Group.findByPk(parseInt(groupId));
     if(!group) return res.status(404).json({message: "Group couldn't be found"})
 
-    const user = await User.findByPk(parseInt(memberId));
-    if(!user) return res.status(404).json({message: "User couldn't be found"})
+    const member = await Membership.findOne({where: {userId : memberId}});
+    if(!member) return res.status(400).json({message: "User couldn't be found"})
 
     const currentMember = await Membership.findOne(
-        {where: {
+         {where: {
             userId: userId, groupId: groupId
-        }}
-    );
+            }}
+         );
+    if(!currentMember) return res.status(403).json({message: "Forbidden"});
 
-    const findMember = await Membership.findByPk(parseInt(memberId));
-    if(!findMember) return res.status(404).json({message: "Membership between the user and the group does not exist"});
+        const findMemberInGroup = await Membership.findOne({where: {userId : memberId, groupId: groupId},
+        attributes: ['id', 'userId', 'groupId', 'status']});
+        if(!findMemberInGroup) return res.status(404).json({message: "Membership between the user and the group does not exist"});
 
 
 
@@ -519,30 +528,30 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
 
 
     const statuses = ['owner', 'co-host'];
-    if(statuses.includes(currentMember.status.toLowerCase()) && findMember.status === 'pending') {
-        findMember.set({
+    if(statuses.includes(currentMember.status.toLowerCase()) && findMemberInGroup.status === 'pending') {
+        findMemberInGroup.set({
             status: status
         });
 
-        findMember.save()
+        findMemberInGroup.save()
         return res.json({
-            id: findMember.id,
-            groupId: findMember.groupId,
-            memberId: findMember.userId,
-            status: findMember.status
+            id : findMemberInGroup.id,
+            groupId: findMemberInGroup.groupId,
+            memberId: findMemberInGroup.userId,
+            status: findMemberInGroup.status
         })
     };
 
-    if(currentMember.status.toLowerCase() === 'owner' && findMember.status === 'member') {
-        findMember.set({
+    if(currentMember.status.toLowerCase() === 'owner' && findMemberInGroup.status === 'member') {
+        findMemberInGroup.set({
             status: status
         });
 
-        findMember.save()
+        findMemberInGroup.save()
         return res.json({
-            id: findMember.id,
-            groupId: findMember.groupId,
-            memberId: findMember.userId,
+            id: findMemberInGroup.id,
+            groupId: findMemberInGroup.groupId,
+            memberId: findMemberInGroup.userId,
             status: status
         })
     } else {

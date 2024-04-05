@@ -2,38 +2,37 @@ const { handleValidationErrors } = require('./validation.js')
 const { check } = require('express-validator');
 const { User, Group, Event, Venue, Membership, GroupImage, EventImage,Attendee } = require('../db/models');
 
+const validateLogin = [
+    check('credential')
+        .exists({ checkFalsy: true })
+        .notEmpty()
+        .withMessage('Please provide a valid email or username.'),
+    check('password')
+        .exists({ checkFalsy: true })
+        .withMessage('Please provide a password.'),
+    handleValidationErrors
+];
+
 const validateSignup = [
-    check('firstName')
-        .exists({ checkFalsy: true })
-        .withMessage('Please provide your first name.'),
-    check('lastName')
-        .exists({ checkFalsy: true })
-        .withMessage('Please provide your last name.'),
-    check('username')
-        .exists({ checkFalsy: true })
-        .isLength({ min: 4, max: 30})
-        .withMessage('Please provide a username within 4 and 30 characters.')
-        .custom(async (value) => {
-            const user = await User.findOne({ where: { userName: value } });
-            if (user) {
-                throw new Error('Username already exists');
-            }
-        }),
-    check('username')
-        .not()
-        .isEmail()
-        .withMessage('Username cannot be an email.'),
     check('email')
         .exists( { checkFalsy: true } )
         .isEmail()
         .isLength({min: 3, max: 256})
-        .withMessage('Please provide a valid email.')
-        .custom(async (value) => {
-            const user = await User.findOne({ where: { email: value } });
-            if (user) {
-                throw new Error('Email already exists. Proceed to sign in.');
-            }
-        }),
+        .withMessage('Invalid email'),
+    check('username')
+        .exists({ checkFalsy: true })
+        .isLength({ min: 4, max: 30})
+        .withMessage('Username is required'),
+    check('username')
+        .not()
+        .isEmail()
+        .withMessage('Username cannot be an email.'),
+    check('firstName')
+        .exists({ checkFalsy: true })
+        .withMessage('First Name is required'),
+    check('lastName')
+        .exists({ checkFalsy: true })
+        .withMessage('Last Name is required'),
     check('password')
         .exists({ checkFalsy: true})
         .isLength({min: 6})
@@ -208,6 +207,7 @@ const validateQueries = [
 
 module.exports =
 {
+  validateLogin,
   validateSignup,
   validateVenueCreation,
   validateGroupCreation,

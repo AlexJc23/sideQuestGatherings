@@ -7,21 +7,23 @@ const { setTokenCookie, restoreUser } = require('../../utils/auth.js');
 const { User } = require('../../db/models');
 
 
-const { check } = require('express-validator');
+
+const {validateLogin} = require('../../utils/validateChecks')
+
 const { handleValidationErrors } = require('../../utils/validation.js');
 
 const router = express.Router();
 
-const validateLogin = [
-    check('credential')
-        .exists({ checkFalsy: true })
-        .notEmpty()
-        .withMessage('Please provide a valid email or username.'),
-    check('password')
-        .exists({ checkFalsy: true })
-        .withMessage('Please provide a password.'),
-    handleValidationErrors
-];
+// const validateLogin = [
+//     check('credential')
+//         .exists({ checkFalsy: true })
+//         .notEmpty()
+//         .withMessage('Please provide a valid email or username.'),
+//     check('password')
+//         .exists({ checkFalsy: true })
+//         .withMessage('Please provide a password.'),
+//     handleValidationErrors
+// ];
 
 
 
@@ -35,20 +37,24 @@ router.get('/', async (req, res) => {
             username: user.username,
         };
 
+        const currentUser = await User.findByPk(user.id)
+
         return res.json({
-            user: safeUser
+
+            user: currentUser
         })
     } else {
         return res.json({
             user: null
         });
     }
+
 });
 
 
 // Log in
 router.post(
-    '/',
+    '/', validateLogin,
     async (req, res, next) => {
       const { credential, password } = req.body;
 
@@ -62,11 +68,11 @@ router.post(
       });
 
       if (!user || !bcrypt.compareSync(password, user.hashedPassword.toString())) {
-        const err = new Error('Login failed');
-        err.status = 401;
-        err.title = 'Login failed';
-        err.errors = { credential: 'The provided credentials were invalid.' };
-        return next(err);
+        // const err = new Error('Login failed');
+        // err.status = 401;
+        // err.title = 'Login failed';
+        // err.errors = { credential: 'Invalid credentials' };
+        return res.status(401).json({message: 'Invalid credentials'});
       }
 
       const safeUser = {
@@ -75,10 +81,20 @@ router.post(
         username: user.username,
       };
 
+      const currentUser = await User.findByPk(safeUser.id)
+
+      const userInfo = {
+        id: currentUser.id,
+        firstName: currentUser.firstName,
+        lastName: currentUser.lastName,
+        email: currentUser.email,
+        username: currentUser.username
+
+      }
       await setTokenCookie(res, safeUser);
 
       return res.json({
-        user: safeUser
+        user: userInfo
       });
     }
   );

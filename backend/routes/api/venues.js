@@ -19,7 +19,7 @@ router.put('/:venueId', requireAuth, validateVenueCreation, async (req, res, nex
 
     const venueById = await Venue.findByPk(parseInt(venueId), {attributes: { exclude: ['updatedAt', 'createdAt'] }});
 
-    if(!venueById) return res.json({message: "Venue couldn't be found"});
+    if(!venueById) return res.status(404).json({message: "Venue couldn't be found"});
 
     const member = await Membership.findByPk(parseInt(currentUser.id), {where: {
         groupId: venueById.groupId, userId: currentUser.id
@@ -36,6 +36,8 @@ router.put('/:venueId', requireAuth, validateVenueCreation, async (req, res, nex
 
     if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST')) {
         venueById.save()
+
+
         return res.json(venueById)
     } else {
         return res.status(403).json({message: "Forbidden"})
