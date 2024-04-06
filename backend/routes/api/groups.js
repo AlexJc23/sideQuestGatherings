@@ -145,7 +145,15 @@ router.get('/:groupId', async (req, res) => {
         numMembers: memberCount,
         GroupImages: groupById.GroupImages,
         Organizer: groupById.User,
-        Venues: groupById.Venues
+        Venues: groupById.Venues.map(venue => ({
+                id: venue.id,
+                groupId: venue.groupId,
+                address: venue.address,
+                city: venue.city,
+                state: venue.state,
+                lat: venue.latitude,
+                lng: venue.longitude
+            }))
     };
     res.json(groupData)}
 });
@@ -273,7 +281,16 @@ router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
             const venues = await Venue.findAll( {
                 where: {groupId: groupId}
             })
-            res.json({Venues: venues})
+            const allVenues = venues.map(venue => ({
+                id: venue.id,
+                groupId: venue.groupId,
+                address: venue.address,
+                city: venue.city,
+                state: venue.state,
+                lat: venue.latitude,
+                lng: venue.longitude
+            }));
+            res.json({Venues: allVenues})
         } else {
             return res.status(403).json({message: "Forbidden"})
         }
@@ -301,8 +318,17 @@ router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, 
             longitude: lng
         });
 
-        const confirmedVenue = await Venue.findByPk(newVenue.id);
+        const findNewVenue = await Venue.findByPk(newVenue.id);
 
+        const confirmedVenue = {
+            id: findNewVenue.id,
+            groupId: findNewVenue.groupId,
+            address: findNewVenue.address,
+            city: findNewVenue.city,
+            state: findNewVenue.state,
+            lat: findNewVenue.latitude,
+            lng: findNewVenue.longitude
+        }
 
         return res.json(confirmedVenue)
     } else {

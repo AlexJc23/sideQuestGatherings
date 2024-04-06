@@ -37,8 +37,16 @@ router.put('/:venueId', requireAuth, validateVenueCreation, async (req, res, nex
     if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST')) {
         venueById.save()
 
-
-        return res.json(venueById)
+        const editedVenue = {
+            id: venueById.id,
+            groupId: venueById.groupId,
+            address: venueById.address,
+            city: venueById.city,
+            state: venueById.state,
+            lat: venueById.latitude,
+            lng: venueById.longitude
+        }
+        return res.json(editedVenue)
     } else {
         return res.status(403).json({message: "Forbidden"})
     }

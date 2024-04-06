@@ -181,27 +181,48 @@ const validateAttendanceStatus = [
 const validateQueries = [
     check('page')
         .optional()
-        .isInt({ min: 1, max: 10 })
         .default(1)
-        .withMessage('Page must be greater than or equal to 1 or less than or equal to 10'),
-    check('size')
+        .isInt({ min: 1 })
+        .withMessage('Page must be greater than or equal to 1'),
+        check('size')
         .optional()
-        .isInt({min: 1, max: 20})
         .default(20)
-        .withMessage("Size must be greater than or equal to 1 and less than or equal to 20"),
+        .isInt({min: 1, max: 20})
+        .withMessage("Size must be between 1 and 20"),
     check('name')
         .optional()
         .isString()
         .withMessage('Name must be a string'),
     check('type')
         .optional()
-        .isIn(['Online', 'In Person'])
-        .withMessage("Type must be 'Online' or 'In Person'"),
+        .custom(value => {
+            if (!value) {
+                return true; // Optional field, so no validation needed if it's empty
+            }
+
+            if(['Online', 'In Person'].includes(value)) {
+                return true
+            } else {
+                throw new Error("Type must be 'Online' or 'In Person'")
+            }
+        }),
     check('startDate')
         .optional()
-        .isISO8601()
+        .isString()
+        .custom(value => {
+            if (!value) {
+                return true; // Optional field, so no validation needed if it's empty
+            }
 
-        .withMessage('"Start date must be a valid datetime"'),
+            if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(value) && value !== " ") {
+                throw new Error('Start date must be in ISO 8601 format');
+            }
+
+            // Additional validation on the parsed date if needed
+
+            return true; // Return true if validation succeeds
+        })
+        .withMessage('Start date must be a valid datetime'),
     handleValidationErrors
 ];
 
