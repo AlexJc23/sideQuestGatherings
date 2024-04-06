@@ -19,7 +19,7 @@ router.get('/', validateQueries, async (req, res) => {
     page = Number(page);
     size = Number(size);
 
-    if (isNaN(page) || page < 1 || page > 10) page = 1;
+    if (isNaN(page) || page < 1 ) page = 1;
     if (isNaN(size) || size < 1 || size > 20) size = 20;
 
     const where = {};
@@ -28,14 +28,15 @@ router.get('/', validateQueries, async (req, res) => {
     pagination.offset = size * (page - 1);
 
     if(name && name !== " ") {
-        where.name = name
-    };
+        where.name =
+            {[Op.like]: `%${name}%`}
+        }
 
-    if(type) {
+    if(type && type !== " ") {
         where.type = type
     };
 
-    if(startDate) {
+    if(startDate && startDate !== "") {
         where.startDate = startDate
     };
 
