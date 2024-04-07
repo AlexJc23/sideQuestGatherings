@@ -101,8 +101,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
             private: group.private,
             city: group.city,
             state: group.state,
-            createdAt: group.convertDate(createdAt),
-            updatedAt: group.convertDate(updatedAt),
+            createdAt: convertDate(group.createdAt),
+            updatedAt: convertDate(group.updatedAt),
             numMembers: memberCount,
             previewImage: group.GroupImages.length > 0 ? group.GroupImages[0].imageUrl : null
         });
