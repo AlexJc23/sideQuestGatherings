@@ -5,10 +5,11 @@ const { Op } = require('sequelize');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Group, Event, Venue, Membership, GroupImage, EventImage,Attendee } = require('../../db/models');
 const {validateGroupCreation, validateVenueCreation, validateEventCreation, validateMemberCreation } = require('../../utils/validateChecks')
-const {convertDate} = require('../../utils/helpFunc');
+
 // const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation.js');
 const { parse } = require('qs');
+const { convertDate } = require('../../utils/helpFunc');
 const router = express.Router();
 
 
@@ -178,7 +179,19 @@ router.post('/', requireAuth, validateGroupCreation,  async (req, res) => {
         status: 'owner'
     });
 
-    res.status(201).json(newGroup)
+    const newGroupAdd = {
+        id: newGroup.id,
+        organizerId: newGroup.organizerId,
+        name: newGroup.name,
+        about: newGroup.about,
+        type: newGroup.type,
+        private: newGroup.private,
+        city: newGroup.city,
+        state: newGroup.state,
+        createdAt: convertDate(newGroup.createdAt),
+        updatedAt: convertDate(newGroup.updatedAt)
+    }
+    return res.status(201).json(newGroupAdd)
 });
 
 
@@ -232,7 +245,19 @@ router.put('/:groupId', requireAuth, validateGroupCreation, async (req, res, nex
 
             // Saving changes to the database
             await groupById.save();
-            return res.json(groupById);
+            const confirmedGroupChange = {
+                id: groupById.id,
+                organizerId: groupById.organizerId,
+                name: groupById.name,
+                about: groupById.about,
+                type: groupById.type,
+                private: groupById.private,
+                city: groupById.city,
+                state: groupById.city,
+                createdAt: convertDate(groupById.createdAt),
+                updatedAt: convertDate(groupById.updatedAt)
+            };
+            return res.json(confirmedGroupChange);
         } catch (error) {
             // Handling any database save error
             return next(error);
@@ -304,14 +329,13 @@ router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, 
     const group = await Group.findByPk(parseInt(groupId));
     if(!group) return res.status(404).json({message: "Group couldn't be found"})
 
-    const member = await Membership.findOne({where: {
+    const member = await Membership.findByPk(parseInt(currentUser.id), {where: {
         groupId: groupId, userId: currentUser.id
     }});
     if(!member) return res.status(403).json({message: "Forbidden"});
 
-
-    const statuses = ['owner', 'co-host']
-    if(statuses.includes(member.status.toLowerCase()) && member.userId === currentUser.id) {
+    const statuses = ['co-host', 'owner']
+    if(statuses.includes(member.status.toLowerCase())) {
         const newVenue = await Venue.unscoped().create( {
             groupId: groupId,
             address: address,
@@ -369,7 +393,6 @@ router.get('/:groupId/events', async (req, res) => {
 
         });
 
-    // let convertedDate = convertDate(event.startDate)
         allEvents.push ({
             id: event.id,
             groupId: event.groupId,
@@ -421,7 +444,7 @@ router.post('/:groupId/events', requireAuth, validateEventCreation, async (req, 
 
     const confirmedEvent = {
         id: newEvent.id,
-        groupId: parseInt(newEvent.groupId),
+        groupId: newEvent.groupById,
         venueId: newEvent.venueId,
         name: newEvent.name,
         type: newEvent.type,
@@ -430,6 +453,7 @@ router.post('/:groupId/events', requireAuth, validateEventCreation, async (req, 
         description: newEvent.description,
         startDate: convertDate(newEvent.startDate),
         endDate: convertDate(newEvent.endDate)
+
     }
     return res.json(confirmedEvent);
     } else {

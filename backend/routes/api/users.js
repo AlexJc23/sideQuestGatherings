@@ -8,13 +8,16 @@ const { User } = require('../../db/models');
 // const { handleValidationErrors } = require('../../utils/validation.js')
 const router = express.Router();
 
-const {validateSignup, validateUserAndEmail} = require('../../utils/validateChecks')
+
+const {validateSignup, validateEmailandUser} = require('../../utils/validateChecks')
+
 
 
 
 // Sign up
 router.post(
-  '/', validateSignup, validateUserAndEmail,
+  '/', validateSignup, validateEmailandUser,
+
   async (req, res) => {
     const { firstName, lastName, email, username, password } = req.body;
     const hashedPassword = bcrypt.hashSync(password);

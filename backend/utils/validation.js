@@ -18,7 +18,9 @@ const handleValidationErrors = ( req, res, next ) => {
     }
     next();
 };
-const handleValidationErrors500 = ( req, res, next ) => {
+
+const handleValidationErrorCheck = ( req, res, next ) => {
+
     const validationErrors = validationResult(req);
 
     if(!validationErrors.isEmpty()) {
@@ -36,4 +38,6 @@ const handleValidationErrors500 = ( req, res, next ) => {
     next();
 };
 
-module.exports = { handleValidationErrors, handleValidationErrors500 };
+
+module.exports = { handleValidationErrors,handleValidationErrorCheck };
+
