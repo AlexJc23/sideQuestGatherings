@@ -343,7 +343,7 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
     if(!event) return res.status(404).json({message: "Event couldn't be found"});
 
     const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
-    if(!currentUser) return res.status(404).json({message: "User coundn't be found"});
+    if(!currentUser) return res.status(404).json({message: "User couldn't be found"});
 
     const attending = await Attendee.findOne({where: {userId: userId, eventId: eventId},
     attributes: ['id', 'userId', 'eventId', 'status']});
@@ -382,7 +382,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
     if(!event) return res.status(404).json({message: "Event couldn't be found"});
 
     const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
-    if(!currentUser) return res.status(404).json({message: "User coundn't be found"});
+    if(!currentUser) return res.status(404).json({message: "User couldn't be found"});
     const attending = await Attendee.findOne({where: {userId: userId, eventId: eventId}});
     // return res.json(currentUser.status)
 
