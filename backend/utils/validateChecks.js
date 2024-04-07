@@ -109,8 +109,8 @@ const validateEventCreation = [
         .withMessage("Capacity must be an integer"),
     check('price')
         .exists()
+        .isDecimal([2])
         .isFloat({ min: 0 })
-        .matches(/^\d+(\.\d{1,2})?$/)
         .withMessage("Price is invalid"),
     check('description')
         .exists({checkFalsy: true})
@@ -118,12 +118,11 @@ const validateEventCreation = [
         .withMessage("Description is required"),
     check('startDate')
         .exists()
-        // .isDate()
         .custom((value, { req }) => {
-            const startDate = new Date(value);
-            const currentDate = new Date();
-
-            if (startDate <= currentDate) {
+            // const startDate = value;
+            const currentDate = new Date().getTime();
+            const startVal = new Date(value).getTime()
+            if (startVal < currentDate) {
                  throw new Error('Start date must be in the future');
             }
              return true;
@@ -139,8 +138,7 @@ const validateEventCreation = [
                 throw new Error('End date is less than start date');
             }
 
-            // Indicates the success of this synchronous custom validator
-            return true;
+            return value;
         }),
     handleValidationErrors
 ];
@@ -215,7 +213,7 @@ const validateQueries = [
             }
 
             if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d{1,6})?(?:Z|[+-]\d{2}:\d{2})$/.test(value) && value !== " ") {
-                throw new Error('Start date must be in ISO 8601 format');
+                throw new Error('Start date must be in valid date format');
             }
 
             // Additional validation on the parsed date if needed

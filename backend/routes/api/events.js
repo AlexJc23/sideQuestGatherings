@@ -4,6 +4,8 @@ const bcrypt = require('bcryptjs');
 const { Op } = require('sequelize');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Group, Event, Venue, Attendee, GroupImage, EventImage, Membership } = require('../../db/models');
+const {convertDate} = require('../../utils/helpFunc');
+
 
 const { validateEventCreation, validateAttendanceStatus, validateQueries } = require('../../utils/validateChecks')
 
@@ -72,8 +74,8 @@ router.get('/', validateQueries, async (req, res) => {
             venueId: event.venueId,
             name: event.name,
             type: event.type,
-            startDate: event.startDate,
-            endDate: event.endDate,
+            startDate: convertDate(event.startDate),
+            endDate: convertDate(event.endDate),
             numAttending: attending,
             previewImage: event.EventImages.length > 0 ? event.EventImages[0].imageUrl : null,
             Group: event.Group,
@@ -120,8 +122,8 @@ router.get('/:eventId', async (req, res) => {
             type: events.type,
             capacity: events.capacity,
             price: events.price,
-            startDate: events.startDate,
-            endDate: events.endDate,
+            startDate: convertDate(events.startDate),
+            endDate: convertDate(events.endDate),
             numAttending: attending,
             Group: events.Group,
             Venue: {
@@ -205,7 +207,17 @@ router.put('/:eventId', requireAuth, validateEventCreation, async (req, res) => 
     if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST')) {
     eventToUpdate.save()
 
-    const confirmedEvent = await Event.findByPk(eventToUpdate.id)
+    const confirmedEvent = {
+        groupId: eventToUpdate.groupId,
+        venueId: eventToUpdate.venueId,
+        name: eventToUpdate.name,
+        type: eventToUpdate.type,
+        capacity: eventToUpdate.capacity,
+        price: eventToUpdate.price,
+        description: eventToUpdate.description,
+        startDate: convertDate(startDate),
+        endDate: convertDate(endDate)
+    }
 
     return res.json(confirmedEvent);
     } else {

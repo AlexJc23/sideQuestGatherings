@@ -28,8 +28,8 @@ module.exports = {
     {
       organizerId: 1,
       name: 'Test1',
-      about: 'Test1',
-      type: 'Test1',
+      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      type: 'Online',
       private: true,
       city: 'Test',
       state: 'OH'
@@ -37,8 +37,8 @@ module.exports = {
     {
       organizerId: 1,
       name: 'Test2',
-      about: 'Test2',
-      type: 'Test2',
+      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      type: 'Online',
       private: false,
       city: 'Test',
       state: 'MI'
@@ -46,8 +46,8 @@ module.exports = {
     {
       organizerId: 2,
       name: 'Test3',
-      about: 'Test3',
-      type: 'Test3',
+      about: "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+      type: 'Online',
       private: true,
       city: 'Test',
       state: 'TX'

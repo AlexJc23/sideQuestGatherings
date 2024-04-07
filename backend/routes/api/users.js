@@ -43,7 +43,7 @@ router.post(
     const newUser = {
       id: user.id,
       firstName: user.firstName,
-      lastname: user.lastName,
+      lastName: user.lastName,
       email: user.email,
       username: user.username
     }

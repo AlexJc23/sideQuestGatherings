@@ -5,7 +5,7 @@ const { Op } = require('sequelize');
 const { setTokenCookie, requireAuth } = require('../../utils/auth');
 const { User, Group, Event, Venue, Membership, GroupImage, EventImage,Attendee } = require('../../db/models');
 const {validateGroupCreation, validateVenueCreation, validateEventCreation, validateMemberCreation } = require('../../utils/validateChecks')
-
+const {convertDate} = require('../../utils/helpFunc');
 // const { check } = require('express-validator');
 const { handleValidationErrors } = require('../../utils/validation.js');
 const { parse } = require('qs');
@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.get('/', async (req, res) => {
 
-    const allGroups = await Group.findAll({include: [
+    const allGroups = await Group.unscoped().findAll({include: [
         {model: GroupImage,
         attributes: ['imageUrl'],
         order: [['preview', 'DESC']]
@@ -42,14 +42,14 @@ router.get('/', async (req, res) => {
             private: group.private,
             city: group.city,
             state: group.state,
-            createdAt: group.createdAt,
-            updatedAt: group.updatedAt,
+            createdAt: convertDate(group.createdAt),
+            updatedAt: convertDate(group.updatedAt),
             numMembers: memberCount,
             previewImage: group.GroupImages.length > 0 ? group.GroupImages[0].imageUrl : null
         });
     }
 
-    return res.json({ groups: groupData });
+    return res.json({ Groups: groupData });
 });
 
 router.get('/current', requireAuth, async (req, res, next) => {
@@ -101,8 +101,8 @@ router.get('/current', requireAuth, async (req, res, next) => {
             private: group.private,
             city: group.city,
             state: group.state,
-            createdAt: group.createdAt,
-            updatedAt: group.updatedAt,
+            createdAt: group.convertDate(createdAt),
+            updatedAt: group.convertDate(updatedAt),
             numMembers: memberCount,
             previewImage: group.GroupImages.length > 0 ? group.GroupImages[0].imageUrl : null
         });
@@ -140,8 +140,8 @@ router.get('/:groupId', async (req, res) => {
         private: groupById.private,
         city: groupById.city,
         state: groupById.state,
-        createdAt: groupById.createdAt,
-        updatedAt: groupById.updatedAt,
+        createdAt: convertDate(groupById.createdAt),
+        updatedAt: convertDate(groupById.updatedAt),
         numMembers: memberCount,
         GroupImages: groupById.GroupImages,
         Organizer: groupById.User,
@@ -178,7 +178,7 @@ router.post('/', requireAuth, validateGroupCreation,  async (req, res) => {
         status: 'owner'
     });
 
-    res.json(newGroup)
+    res.status(201).json(newGroup)
 });
 
 
@@ -304,11 +304,14 @@ router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, 
     const group = await Group.findByPk(parseInt(groupId));
     if(!group) return res.status(404).json({message: "Group couldn't be found"})
 
-    const member = await Membership.findByPk(parseInt(currentUser.id), {where: {
+    const member = await Membership.findOne({where: {
         groupId: groupId, userId: currentUser.id
     }});
+    if(!member) return res.status(403).json({message: "Forbidden"});
 
-    if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST') && group.organizerId === currentUser.id) {
+
+    const statuses = ['owner', 'co-host']
+    if(statuses.includes(member.status.toLowerCase()) && member.userId === currentUser.id) {
         const newVenue = await Venue.unscoped().create( {
             groupId: groupId,
             address: address,
@@ -340,7 +343,7 @@ router.get('/:groupId/events', async (req, res) => {
     const groups = await Group.findByPk(parseInt(groupId))
     let allEvents = [];
 
-    if(!groups) return res.status(404).json({message: "Group coundn't be found"})
+    if(!groups) return res.status(404).json({message: "Group couldn't be found"})
     const events = await Event.findAll({
         where: {groupId: parseInt(groupId)},
         include: [
@@ -366,14 +369,15 @@ router.get('/:groupId/events', async (req, res) => {
 
         });
 
+    // let convertedDate = convertDate(event.startDate)
         allEvents.push ({
             id: event.id,
             groupId: event.groupId,
             venueId: event.venueId,
             name: event.name,
             type: event.type,
-            startDate: event.startDate,
-            endDate: event.endDate,
+            startDate: convertDate(event.startDate),
+            endDate: convertDate(event.endDate),
             numAttending: attending,
             previewImage: event.EventImages.length > 0 ? event.EventImages[0].imageUrl : null,
             Group: event.Group,
@@ -415,7 +419,18 @@ router.post('/:groupId/events', requireAuth, validateEventCreation, async (req, 
         endDate
     });
 
-    const confirmedEvent = await Event.findByPk(newEvent.id)
+    const confirmedEvent = {
+        id: newEvent.id,
+        groupId: parseInt(newEvent.groupId),
+        venueId: newEvent.venueId,
+        name: newEvent.name,
+        type: newEvent.type,
+        capacity: newEvent.capacity,
+        price: newEvent.price,
+        description: newEvent.description,
+        startDate: convertDate(newEvent.startDate),
+        endDate: convertDate(newEvent.endDate)
+    }
     return res.json(confirmedEvent);
     } else {
         res.status(403).json({message: "Forbidden"})
