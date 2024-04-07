@@ -1,4 +1,4 @@
-const { handleValidationErrors } = require('./validation.js')
+const { handleValidationErrors, handleValidationErrors500 } = require('./validation.js')
 const { check } = require('express-validator');
 const { User, Group, Event, Venue, Membership, GroupImage, EventImage,Attendee } = require('../db/models');
 
@@ -38,6 +38,23 @@ const validateSignup = [
         .isLength({min: 6})
         .withMessage('Password must be 6 characters or more.'),
     handleValidationErrors
+];
+const validateUserAndEmail = [
+    check('email')
+        .custom(async (value) => {
+            const user = await User.findOne({ where: { email: value } });
+            if (user) {
+                throw new Error('Email already exists');
+            }
+        }),
+    check('username')
+        .custom(async (value) => {
+            const user = await User.findOne({ where: { username: value } });
+            if (user) {
+                throw new Error('Username already exists');
+            }
+        }),
+    handleValidationErrors500
 ];
 
 const validateGroupCreation = [
@@ -226,6 +243,7 @@ const validateQueries = [
 
 module.exports =
 {
+  validateUserAndEmail,
   validateLogin,
   validateSignup,
   validateVenueCreation,
