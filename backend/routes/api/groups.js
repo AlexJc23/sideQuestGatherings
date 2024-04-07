@@ -70,7 +70,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
                 include: [
                     {
                         model: GroupImage,
-                        attributes: ['imageUrl'],
+                        attributes: ['imageUrl', 'createdAt', 'updatedAt'],
                         order: [['preview', 'DESC']]
                     }
                 ]
@@ -84,7 +84,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     // Iterate over each group
     for (const member of userGroups) {
         const group = member.Group;
-
+        // console.log('hellllooooo', member.Group.createdAt)
         // COUNT the number of members for the current group
         const memberCount = await Membership.count({
             where: {
@@ -110,7 +110,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
     }
 
 
-    return res.send({ groups: groupData });
+    return res.send({ Groups: groupData });
 
 });
 
