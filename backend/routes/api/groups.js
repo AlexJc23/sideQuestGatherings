@@ -122,7 +122,7 @@ router.get('/:groupId', async (req, res) => {
 
     }else {  groupById = await Group.unscoped().findByPk(parseInt(groupId), {
         include: [
-            {model: GroupImage},
+            {model: GroupImage, attributes: ['id', 'imageUrl', 'preview']},
             {model: User, attributes: ['id', 'firstName', 'lastName']},
             {model: Venue, attributes: {exclude: ['createdAt', 'updatedAt']}}
         ]})
@@ -144,7 +144,11 @@ router.get('/:groupId', async (req, res) => {
         createdAt: convertDate(groupById.createdAt),
         updatedAt: convertDate(groupById.updatedAt),
         numMembers: memberCount,
-        GroupImages: groupById.GroupImages,
+        GroupImages: groupById.GroupImages.map(groupimg => ({
+            id: groupimg.id,
+            url: groupimg.imageUrl,
+            preview: groupimg.preview
+        })),
         Organizer: groupById.User,
         Venues: groupById.Venues.map(venue => ({
                 id: venue.id,
@@ -152,8 +156,8 @@ router.get('/:groupId', async (req, res) => {
                 address: venue.address,
                 city: venue.city,
                 state: venue.state,
-                lat: venue.latitude,
-                lng: venue.longitude
+                lat: Number(venue.latitude),
+                lng: Number(venue.longitude)
             }))
     };
     res.json(groupData)}
@@ -212,9 +216,15 @@ router.post('/:groupId/images',  requireAuth, async (req, res, next) => {
             preview: preview
         });
 
-    const image = await GroupImage.findByPk(newImage.id)
+    const image = await GroupImage.findByPk(newImage.id);
 
-        return res.json(image);
+    const confirmedImage = {
+        id: image.id,
+        url: image.imageUrl,
+        preview: image.preview
+    }
+
+        return res.json(confirmedImage);
     } else {
         return res.status(403).json({ message: "Forbidden" });
     }
@@ -276,12 +286,15 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
         userId: userId,
         groupId: groupId
     }});
+
+    if(!membership) return res.status(403).json({message: "Foridden"})
+
     if (!groupById) {
         return res.status(404).json({ message: "Group couldn't be found" });
     }
 
     if (groupById.organizerId === userId) {
-        await membership.destroy();
+        // await membership.destroy();
         await groupById.destroy();
         res.json({message: "Successfully deleted"})
     } else {
@@ -297,12 +310,14 @@ router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
     const group = await Group.findByPk(parseInt(groupId));
     if(!group) return res.status(404).json({message: "Group couldn't be found"})
 
-    const member = await Membership.findByPk(parseInt(currentUser.id), {where: {
+    const member = await Membership.findOne({where: {
         groupId: groupId, userId: currentUser.id
     }});
 
+    if(!member) return res.status(403).json({message: "Forbidden"})
 
-        if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST') && group.organizerId === currentUser.id) {
+        const statuses = ['co-host', 'owner']
+        if(statuses.includes(member.status.toLowerCase())) {
             const venues = await Venue.findAll( {
                 where: {groupId: groupId}
             })
@@ -312,8 +327,8 @@ router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
                 address: venue.address,
                 city: venue.city,
                 state: venue.state,
-                lat: venue.latitude,
-                lng: venue.longitude
+                lat: Number(venue.latitude),
+                lng: Number(venue.longitude)
             }));
             res.json({Venues: allVenues})
         } else {
@@ -353,8 +368,8 @@ router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, 
             address: findNewVenue.address,
             city: findNewVenue.city,
             state: findNewVenue.state,
-            lat: findNewVenue.latitude,
-            lng: findNewVenue.longitude
+            lat: Number(findNewVenue.latitude),
+            lng: Number(findNewVenue.longitude)
         }
 
         return res.json(confirmedVenue)
@@ -449,7 +464,7 @@ router.post('/:groupId/events', requireAuth, validateEventCreation, async (req, 
         name: newEvent.name,
         type: newEvent.type,
         capacity: newEvent.capacity,
-        price: newEvent.price,
+        price: Number(newEvent.price).toFixed(2),
         description: newEvent.description,
         startDate: convertDate(newEvent.startDate),
         endDate: convertDate(newEvent.endDate)
@@ -574,7 +589,7 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
     if(!group) return res.status(404).json({message: "Group couldn't be found"})
 
     const member = await Membership.findOne({where: {userId : memberId}});
-    if(!member) return res.status(400).json({message: "User couldn't be found"})
+    if(!member) return res.status(404).json({message: "User couldn't be found"})
 
     const currentMember = await Membership.findOne(
          {where: {

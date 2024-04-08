@@ -121,7 +121,7 @@ router.get('/:eventId', async (req, res) => {
             description: events.description,
             type: events.type,
             capacity: events.capacity,
-            price: events.price,
+            price: Number((events.price).toFixed(2)),
             startDate: convertDate(events.startDate),
             endDate: convertDate(events.endDate),
             numAttending: attending,
@@ -131,8 +131,8 @@ router.get('/:eventId', async (req, res) => {
                 address: events.Venue.address,
                 city: events.Venue.city,
                 state: events.Venue.state,
-                lat: events.Venue.latitude,
-                lng: events.Venue.longitude
+                lat: Number(events.Venue.latitude),
+                lng: Number(events.Venue.longitude)
             },
             EventImages: events.EventImages
         };
@@ -159,15 +159,23 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
         userId: currentUser.id,
         eventId: eventId,
         status: 'Attending'
-    }})
-    if((member.status.toUpperCase() === 'OWNER' || member.status.toUpperCase() === 'CO-HOST') || attendee) {
+    }});
+
+    const statuses = ['co-host', 'owner', 'attending']
+    if(statuses.includes(member.status.toUpperCase()) || attendee.status.toLowerCase() === 'attending') {
         const eventImg = await EventImage.create({
             eventId: eventId,
             imageUrl: url,
             preview: preview
         });
 
-        const confirmedImage = await EventImage.findByPk(eventImg.id);
+        const image = await EventImage.findByPk(eventImg.id);
+
+        const confirmedImage = {
+            id: image.id,
+            url: image.imageUrl,
+            preview: image.preview
+        }
         return res.json(confirmedImage)
     } else {
         return res.status(403).json({message:'Forbidden'})
@@ -208,12 +216,13 @@ router.put('/:eventId', requireAuth, validateEventCreation, async (req, res) => 
     eventToUpdate.save()
 
     const confirmedEvent = {
+        id: eventToUpdate.id,
         groupId: eventToUpdate.groupId,
         venueId: eventToUpdate.venueId,
         name: eventToUpdate.name,
         type: eventToUpdate.type,
         capacity: eventToUpdate.capacity,
-        price: eventToUpdate.price,
+        price: Number(eventToUpdate.price).toFixed(2),
         description: eventToUpdate.description,
         startDate: convertDate(startDate),
         endDate: convertDate(endDate)
@@ -262,7 +271,9 @@ router.get('/:eventId/attendees', async (req, res) => {
 
 
     let attendees;
-    if (!currentUser || currentUser.status.toUpperCase() === 'PENDING') {
+
+    const statues = ['member', 'pending']
+    if (!currentUser || statues.includes(currentUser.status.toUpperCase())) {
         // If current user is not a member yet or is pending, return all non-pending members
         attendees = await Attendee.findAll({
             where: {
@@ -292,7 +303,7 @@ router.get('/:eventId/attendees', async (req, res) => {
             id: attend.User.id,
             firstName: attend.User.firstName,
             lastName: attend.User.lastName,
-            Membership: {
+            Attendees: {
                 status: attend.status
             }
         });
@@ -316,7 +327,8 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     // return res.json(currentUser)
     if(!currentUser) return res.status(403).json({message: "Forbidden"});
 
-
+    const membership = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
+    if(membership.status === 'pending') return res.status(403).json({message: 'Forbidden'})
 
     if(!attending && currentUser) {
         const newAttendy = await Attendee.create({
@@ -388,8 +400,8 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
 
     if(!attending) return res.status(404).json({message: "Attendance between the user and the event does not exist"});
 
-
-    if((currentUser.status.toLowerCase() === 'owner' || currentUser.status.toLowerCase() === 'co-host') || currentUser.userId === Number(memberId)) {
+    const statuses = ['owner', 'co-host'];
+    if(statuses.includes(currentUser.status.toLowerCase()) || currentUser.userId === Number(memberId)) {
         attending.destroy();
         return res.status(200).json({message: "Successfully deleted attendance from event"})
     } else {
