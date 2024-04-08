@@ -121,7 +121,7 @@ router.get('/:eventId', async (req, res) => {
             description: events.description,
             type: events.type,
             capacity: events.capacity,
-            price: Number(events.price).toFixed(2),
+            price: parseFloat(events.price),
             startDate: convertDate(events.startDate),
             endDate: convertDate(events.endDate),
             numAttending: attending,
@@ -143,25 +143,30 @@ router.get('/:eventId', async (req, res) => {
 router.post('/:eventId/images', requireAuth, async (req, res) => {
     const eventId = req.params.eventId;
     const currentUser = req.user;
-    const {url, preview} = req.body;
+    const { url, preview } = req.body;
 
     const event = await Event.findByPk(parseInt(eventId));
-    //event doesnt exist send error 404 Event couldn't be found
-    if(!event) return res.status(404).json({message: "Event couldn't be found"});
+    if (!event) return res.status(404).json({ message: "Event couldn't be found" });
 
+    const member = await Membership.findOne({
+        where: {
+            groupId: event.groupId,
+            userId: currentUser.id
+        }
+    });
+    if (!member || member.status.toLowerCase() === 'pending') {
+        return res.status(403).json({ message: 'Forbidden' });
+    }
 
-    const member = await Membership.findOne({where: {
-            groupId: event.groupId, userId: currentUser.id
-        }});
-    if(!member) return res.status(403).json({message:'Forbidden'})
+    const attendee = await Attendee.findOne({
+        where: {
+            userId: currentUser.id,
+            eventId: eventId,
+        }
+    });
 
-    const attendee = await Attendee.findOne({where: {
-        userId: currentUser.id,
-        eventId: eventId,
-    }});
-
-    const statuses = ['co-host', 'owner', 'attending']
-    if(statuses.includes(member.status.toLowerCase()) || statuses.includes(attendee.status.toLowerCase())) {
+    const statuses = ['co-host', 'owner'];
+    if (statuses.includes(member.status.toLowerCase()) || (attendee && attendee.status.toLowerCase() === 'attending')) {
         const eventImg = await EventImage.create({
             eventId: eventId,
             imageUrl: url,
@@ -174,10 +179,10 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
             id: image.id,
             url: image.imageUrl,
             preview: image.preview
-        }
-        return res.json(confirmedImage)
+        };
+        return res.json(confirmedImage);
     } else {
-        return res.status(403).json({message:'Forbidden'})
+        return res.status(403).json({ message: 'Forbidden' });
     }
 
 });
@@ -347,74 +352,86 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
 });
 router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async (req, res) => {
     const eventId = req.params.eventId;
-    const memberId = req.user.id;
-    const {userId, status} = req.body;
+    const currentUserId = req.user.id;
+    const { userId, status } = req.body;
 
-    const event = await Event.findByPk(parseInt(eventId));
-    if(!event) return res.status(404).json({message: "Event couldn't be found"});
 
-    const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
-    const memberToUpdate = await Membership.findOne({where: {userId: userId, groupId: event.groupId}});
-    if(!currentUser || !memberToUpdate) return res.status(404).json({message: "User couldn't be found"});
+        // Check if the event exists
+        const event = await Event.findByPk(parseInt(eventId));
+        if (!event) {
+            return res.status(404).json({ message: "Event couldn't be found" });
+        }
 
-    const attending = await Attendee.findOne({where: {userId: userId, eventId: eventId},
-    attributes: ['id', 'userId', 'eventId', 'status']});
+        // Check if the current user is the organizer or a co-host
+        const currentUser = await Membership.findOne({ where: { userId: currentUserId, groupId: event.groupId } });
+        if (!currentUser || !(currentUser.status.toLowerCase() === 'owner' || currentUser.status.toLowerCase() === 'co-host')) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
-    if(!attending) return res.status(404).json({message: "Attendance between the user and the event does not exist"});
+        // Check if the user whose attendance is being updated exists
+        const userToUpdate = await User.findByPk(userId);
+        if (!userToUpdate) {
+            return res.status(404).json({ message: "User couldn't be found" });
+        }
 
-    const statuses = ['owner', 'co-host'];
-    // const memberStatuses = ['member', 'pending'];
-    const attendingStatus = ['pending', 'attending', 'waitlist'];
-    if(statuses.includes(currentUser.status.toLowerCase()) && attendingStatus.includes(attending.status.toLowerCase()) ) {
-        attending.set({
-            status: status
+        // Check if the attendance between the user and the event exists
+        const attending = await Attendee.findOne({ where: { userId: userId, eventId: eventId } });
+        if (!attending) {
+            return res.status(404).json({ message: "Attendance between the user and the event does not exist" });
+        }
+
+        // Check if the requested status change is valid
+        const validStatuses = ['pending', 'attending', 'waitlist'];
+        if (!validStatuses.includes(status.toLowerCase())) {
+            return res.status(400).json({ message: "Bad Request", errors: { status: "Cannot change an attendance status to pending" } });
+        }
+
+        // If all conditions are met, update the attendance status
+        attending.status = status;
+        await attending.save();
+
+        // Return the updated attendance details
+        return res.json({
+            id: attending.id,
+            eventId: attending.eventId,
+            userId: attending.userId,
+            status: attending.status
         });
-
-        attending.save()
-    } else if (!statuses.includes(currentUser.status.toLowerCase())){
-        return res.status(403).json({message: "Forbidden"})
-    };
-
-    return res.json({
-        id:  attending.id,
-        eventId: attending.eventId,
-        userId: attending.userId,
-        status: attending.status
-    });
-
 
 });
 
 router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
     const eventId = req.params.eventId;
-    const memberId = req.user.id;
-    const userId = req.params.userId;
-
-    const isMember = await Membership.findOne({where: {userId: userId, groupId: event.groupId}});
-    if(!isMember) return res.status(403).json({message: "User couldn't be found"});
-
+    const currentUserId = req.user.id;
+    const userIdToDelete = req.params.userId;
 
     const event = await Event.findByPk(parseInt(eventId));
-    if(!event) return res.status(404).json({message: "Event couldn't be found"});
+        if (!event) {
+            return res.status(404).json({ message: "Event couldn't be found" });
+        }
 
-    const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
-    if(!currentUser) return res.status(403).json({message: "Forbidden"});
-    const attending = await Attendee.findOne({where: {userId: userId, eventId: eventId}});
+        const isMember = await Membership.findOne({ where: { userId: userIdToDelete, groupId: event.groupId } });
+        if (!isMember) {
+            return res.status(404).json({ message: "User couldn't be found" });
+        }
 
+        const currentUser = await Membership.findOne({ where: { userId: currentUserId, groupId: event.groupId } });
+        if (!currentUser) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
+        const attending = await Attendee.findOne({ where: { userId: userIdToDelete, eventId: eventId } });
+        if (!attending) {
+            return res.status(404).json({ message: "Attendance does not exist for this User" });
+        }
 
-    const memberStatuses = ['co-host', 'member', 'pending'];
-    if(!attending) return res.status(404).json({message: "Attendance between the user and the event does not exist"});
-    if( memberStatuses.includes(currentUser.status.toLowerCase())) return res.status(403).json({message: "Forbidden"});
-
-
-    const statuses = ['owner'];
-    if(currentUser.status.toLowerCase() === 'owner' || currentUser.userId === Number(memberId)) {
-        attending.destroy();
-        return res.status(200).json({message: "Successfully deleted attendance from event"})
-    } else {
-        return res.status(403).json({message: "Forbidden"})
-    }
+        // Check if the current user is the owner of the event or if they are the user whose attendance is being deleted
+        if (currentUser.status.toLowerCase() === 'owner' || userIdToDelete === currentUserId) {
+            await attending.destroy();
+            return res.status(200).json({ message: "Successfully deleted attendance from event" });
+        } else {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 });
 
 
