@@ -284,7 +284,8 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
     const groupById = await Group.findByPk(parseInt(groupId));
     const membership = await Membership.findOne({where: {
         userId: userId,
-        groupId: groupId
+        groupId: groupId,
+        status: 'owner'
     }});
 
     if(!membership) return res.status(403).json({message: "Foridden"})
@@ -294,7 +295,7 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
     }
 
     if (groupById.organizerId === userId) {
-        // await membership.destroy();
+        await membership.destroy();
         await groupById.destroy();
         res.json({message: "Successfully deleted"})
     } else {
@@ -459,12 +460,12 @@ router.post('/:groupId/events', requireAuth, validateEventCreation, async (req, 
 
     const confirmedEvent = {
         id: newEvent.id,
-        groupId: newEvent.groupById,
+        groupId: Number(newEvent.groupId),
         venueId: newEvent.venueId,
         name: newEvent.name,
         type: newEvent.type,
         capacity: newEvent.capacity,
-        price: Number(newEvent.price).toFixed(2),
+        price: parseFloat(newEvent.price),
         description: newEvent.description,
         startDate: convertDate(newEvent.startDate),
         endDate: convertDate(newEvent.endDate)
@@ -646,26 +647,25 @@ router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res, ne
     const memberId = req.params.memberId;
 
     const group = await Group.findByPk(parseInt(groupId));
-    if(!group) return res.status(404).json({message: "Group couldn't be found"});
+    if (!group) return res.status(404).json({ message: "Group couldn't be found" });
 
     const user = await User.findByPk(parseInt(memberId));
-    if(!user) return res.status(404).json({message: "User couldn't be found"});
+    if (!user) return res.status(404).json({ message: "User couldn't be found" });
 
     const currentMember = await Membership.findOne(
-        {where: {
-            userId: userId, groupId: groupId
-        }}
+        { where: { userId: userId, groupId: groupId } }
     );
 
-    const findMember = await Membership.findOne({where: {userId : memberId, groupId: groupId}});
-    if(!findMember) return res.status(404).json({message: "Membership does not exist for this User"});
+    const findMember = await Membership.findOne({ where: { userId: memberId, groupId: groupId } });
+    if (!findMember) return res.status(404).json({ message: "Membership does not exist for this User" });
 
-    if(currentMember.status.toLowerCase() === 'owner' || currentMember.userId === Number(memberId)) {
+    if (currentMember.status.toLowerCase() === 'owner') {
         findMember.destroy();
-        return res.status(200).json({message: "Successfully deleted membership from group"})
+        return res.status(200).json({ message: "Successfully deleted membership from group" })
     } else {
-        return res.status(403).json({message: "Forbidden"})
+        return res.status(403).json({ message: "Forbidden" })
     }
+
 
 });
 
