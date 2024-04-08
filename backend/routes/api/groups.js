@@ -580,51 +580,40 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
             return res.status(404).json({ message: "Group couldn't be found" });
         }
 
-        const member = await User.findByPk(memberId);
-        if (!member) {
-            return res.status(404).json({ message: "User couldn't be found" });
-        }
+        const currentUser = await Membership.findOne({where: {userId: userId, groupId: groupId}});
+        if(!currentUser) return res.status(404).json({message: "User couldn't be found"});
 
-        const currentMember = await Membership.findOne({ where: { userId: userId, groupId: groupId } });
-        if (!currentMember) {
-            return res.status(403).json({ message: "Forbidden" });
-        }
+        if( currentUser.status.toLowerCase() === 'member' || currentUser.status.toLowerCase() === 'pending') return res.status(403).json({ message: "Forbidden" })
 
-        const findMemberInGroup = await Membership.findOne({
-            where: { userId: memberId, groupId: groupId }
-        });
+        const findMember = await Membership.findOne({where: {userId: memberId, groupId: groupId}});
+        if(!findMember) return res.status(404).json({message: "Membership between the user and the group does not exist"});
 
-        if (!findMemberInGroup) {
-            return res.status(404).json({ message: "Membership between the user and the group does not exist" });
-        }
 
-        if (status === 'pending') {
-            return res.status(400).json({ message: "Bad Request", errors: { status: "Cannot change a membership status to pending" } });
-        }
 
-        if (currentMember.status.toLowerCase() === 'owner' && findMemberInGroup.status === 'member') {
-            findMemberInGroup.status = status;
-            await findMemberInGroup.save();
-            return res.status(200).json({
-                id: findMemberInGroup.id,
-                groupId: findMemberInGroup.groupId,
-                memberId: findMemberInGroup.userId,
+        if(currentUser.status.toLowerCase() === 'owner' || currentUser.status.toLowerCase() === 'co-host'  && status === 'member') {
+            findMember.set({
                 status: status
-            });
-        }
+            })
 
-        if (currentMember.status.toLowerCase() === 'co-host' && findMemberInGroup.status === 'pending') {
-            findMemberInGroup.status = 'member';
-            await findMemberInGroup.save();
-            return res.status(200).json({
-                id: findMemberInGroup.id,
-                groupId: findMemberInGroup.groupId,
-                memberId: findMemberInGroup.userId,
-                status: 'member'
-            });
-        }
+        };
+        
+        if(currentUser.status.toLowerCase() === 'owner' && status === 'co-host') {
+            findMember.set({
+                status: status
+            })
+        };
 
-        return res.status(403).json({ message: "Forbidden" });
+        findMember.save()
+
+            let confirmedChange = {
+                id: findMember.id,
+                groupId: findMember.groupId,
+                memberId: findMember.userId,
+                status: findMember.status
+            }
+            return res.status(200).json(confirmedChange)
+
+
 });
 
 router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res, next) => {

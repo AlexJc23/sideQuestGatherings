@@ -320,13 +320,13 @@ router.get('/:eventId/attendees', async (req, res) => {
 router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     const eventId = req.params.eventId;
     const memberId = req.user.id;
-
+    const userId = req.user.id
 
 
     const event = await Event.findByPk(parseInt(eventId));
     if(!event) return res.status(404).json({message: "Event couldn't be found"})
 
-    const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}})
+    const currentUser = await Membership.findOne({where: {userId: userId, groupId: event.groupId}})
     const attending = await Attendee.findOne({where: {userId: memberId, eventId: eventId}});
     // return res.json(currentUser)
     if(!currentUser) return res.status(403).json({message: "Forbidden"});
