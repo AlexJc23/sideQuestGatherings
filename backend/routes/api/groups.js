@@ -15,7 +15,7 @@ const router = express.Router();
 
 
 
-router.get('/', async (req, res) => {
+router.get('/', requireAuth, async (req, res) => {
 
     const allGroups = await Group.unscoped().findAll({include: [
         {model: GroupImage,
@@ -114,7 +114,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
 });
 
-router.get('/:groupId', async (req, res) => {
+router.get('/:groupId', requireAuth, async (req, res) => {
     const { groupId } = req.params;
     let groupById = await Group.findByPk(parseInt(groupId))
     if(!groupById) {
