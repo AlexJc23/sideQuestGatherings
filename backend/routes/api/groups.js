@@ -305,36 +305,25 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
 });
 
 router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
+    const currentUserId = req.user.id;
     const groupId = req.params.groupId;
-    const currentUser = req.user;
 
-    const group = await Group.findByPk(parseInt(groupId));
-    if(!group) return res.status(404).json({message: "Group couldn't be found"})
 
-    const member = await Membership.findOne({where: {
-        groupId: groupId, userId: currentUser.id
-    }});
-
-    if(!member) return res.status(403).json({message: "Forbidden"})
-
-        const statuses = ['co-host', 'owner']
-        if(statuses.includes(member.status.toLowerCase())) {
-            const venues = await Venue.findAll( {
-                where: {groupId: groupId}
-            })
-            const allVenues = venues.map(venue => ({
-                id: venue.id,
-                groupId: venue.groupId,
-                address: venue.address,
-                city: venue.city,
-                state: venue.state,
-                lat: Number(venue.latitude),
-                lng: Number(venue.longitude)
-            }));
-            res.json({Venues: allVenues})
-        } else {
-            return res.status(403).json({message: "Forbidden"})
+        // Check if the group exists
+        const group = await Group.findByPk(parseInt(groupId));
+        if (!group) {
+            return res.status(404).json({ message: "Group couldn't be found" });
         }
+
+        // Check if the current user is the owner of the group
+        if (group.ownerId !== currentUserId) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
+
+        // Delete the group
+        await group.destroy();
+
+        return res.status(200).json({ message: "Successfully deleted" });
     }
 );
 
@@ -581,91 +570,96 @@ router.post('/:groupId/membership', requireAuth, async (req, res) => {
 });
 
 router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(req, res, next) => {
-
     const userId = req.user.id;
     const groupId = req.params.groupId;
-    const {memberId, status} = req.body;
-
-    const group = await Group.findByPk(parseInt(groupId));
-    if(!group) return res.status(404).json({message: "Group couldn't be found"})
-
-    const member = await Membership.findOne({where: {userId : memberId}});
-    if(!member) return res.status(404).json({message: "User couldn't be found"})
-
-    const currentMember = await Membership.findOne(
-         {where: {
-            userId: userId, groupId: groupId
-            }}
-         );
-    if(!currentMember) return res.status(403).json({message: "Forbidden"});
-
-        const findMemberInGroup = await Membership.findOne({where: {userId : memberId, groupId: groupId},
-        attributes: ['id', 'userId', 'groupId', 'status']});
-        if(!findMemberInGroup) return res.status(404).json({message: "Membership between the user and the group does not exist"});
+    const { memberId, status } = req.body;
 
 
+        const group = await Group.findByPk(parseInt(groupId));
+        if (!group) {
+            return res.status(404).json({ message: "Group couldn't be found" });
+        }
 
+        const member = await User.findByPk(memberId);
+        if (!member) {
+            return res.status(404).json({ message: "User couldn't be found" });
+        }
 
+        const currentMember = await Membership.findOne({ where: { userId: userId, groupId: groupId } });
+        if (!currentMember) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
-
-    const statuses = ['owner', 'co-host'];
-    if(statuses.includes(currentMember.status.toLowerCase()) && findMemberInGroup.status === 'pending') {
-        findMemberInGroup.set({
-            status: status
+        const findMemberInGroup = await Membership.findOne({
+            where: { userId: memberId, groupId: groupId }
         });
 
-        findMemberInGroup.save()
-        return res.json({
-            id : findMemberInGroup.id,
-            groupId: findMemberInGroup.groupId,
-            memberId: findMemberInGroup.userId,
-            status: findMemberInGroup.status
-        })
-    };
+        if (!findMemberInGroup) {
+            return res.status(404).json({ message: "Membership between the user and the group does not exist" });
+        }
 
-    if(currentMember.status.toLowerCase() === 'owner' && findMemberInGroup.status === 'member') {
-        findMemberInGroup.set({
-            status: status
-        });
+        if (status === 'pending') {
+            return res.status(400).json({ message: "Bad Request", errors: { status: "Cannot change a membership status to pending" } });
+        }
 
-        findMemberInGroup.save()
-        return res.json({
-            id: findMemberInGroup.id,
-            groupId: findMemberInGroup.groupId,
-            memberId: findMemberInGroup.userId,
-            status: status
-        })
-    } else {
-        return res.status(403).json({message: "Forbidden"})
-    }
+        if (currentMember.status.toLowerCase() === 'owner' && findMemberInGroup.status === 'member') {
+            findMemberInGroup.status = status;
+            await findMemberInGroup.save();
+            return res.status(200).json({
+                id: findMemberInGroup.id,
+                groupId: findMemberInGroup.groupId,
+                memberId: findMemberInGroup.userId,
+                status: status
+            });
+        }
 
+        if (currentMember.status.toLowerCase() === 'co-host' && findMemberInGroup.status === 'pending') {
+            findMemberInGroup.status = 'member';
+            await findMemberInGroup.save();
+            return res.status(200).json({
+                id: findMemberInGroup.id,
+                groupId: findMemberInGroup.groupId,
+                memberId: findMemberInGroup.userId,
+                status: 'member'
+            });
+        }
+
+        return res.status(403).json({ message: "Forbidden" });
 });
 
 router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res, next) => {
-    const userId = req.user.id;
+    const currentUserId = req.user.id;
     const groupId = req.params.groupId;
     const memberId = req.params.memberId;
 
-    const group = await Group.findByPk(parseInt(groupId));
-    if (!group) return res.status(404).json({ message: "Group couldn't be found" });
 
-    const user = await User.findByPk(parseInt(memberId));
-    if (!user) return res.status(404).json({ message: "User couldn't be found" });
+        const group = await Group.findByPk(parseInt(groupId));
+        if (!group) {
+            return res.status(404).json({ message: "Group couldn't be found" });
+        }
 
-    const currentMember = await Membership.findOne(
-        { where: { userId: userId, groupId: groupId } }
-    );
+        const user = await User.findByPk(parseInt(memberId));
+        if (!user) {
+            return res.status(404).json({ message: "User couldn't be found" });
+        }
 
-    const findMember = await Membership.findOne({ where: { userId: memberId, groupId: groupId } });
-    if (!findMember) return res.status(404).json({ message: "Membership does not exist for this User" });
+        const currentMember = await Membership.findOne({ where: { userId: currentUserId, groupId: groupId } });
+        if (!currentMember) {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
-    if (currentMember.status.toLowerCase() === 'owner') {
-        findMember.destroy();
-        return res.status(200).json({ message: "Successfully deleted membership from group" })
-    } else {
-        return res.status(403).json({ message: "Forbidden" })
-    }
+        const findMember = await Membership.findOne({ where: { userId: memberId, groupId: groupId } });
+        if (!findMember) {
+            return res.status(404).json({ message: "Membership does not exist for this User" });
+        }
 
+        // Check if the current user is the host of the group or the user whose membership is being deleted
+        if (currentMember.status.toLowerCase() === 'owner' || memberId === currentUserId) {
+            await findMember.destroy();
+            return res.status(200).json({ message: "Successfully deleted membership from group" });
+        } else {
+            return res.status(403).json({ message: "Forbidden" });
+        }
 
 });
 
