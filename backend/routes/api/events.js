@@ -121,7 +121,7 @@ router.get('/:eventId', async (req, res) => {
             description: events.description,
             type: events.type,
             capacity: events.capacity,
-            price: Number((events.price).toFixed(2)),
+            price: Number(events.price).toFixed(2),
             startDate: convertDate(events.startDate),
             endDate: convertDate(events.endDate),
             numAttending: attending,
@@ -158,11 +158,10 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
     const attendee = await Attendee.findOne({where: {
         userId: currentUser.id,
         eventId: eventId,
-        status: 'Attending'
     }});
 
     const statuses = ['co-host', 'owner', 'attending']
-    if(statuses.includes(member.status.toUpperCase()) || attendee.status.toLowerCase() === 'attending') {
+    if(statuses.includes(member.status.toLowerCase()) || statuses.includes(attendee.status.toLowerCase())) {
         const eventImg = await EventImage.create({
             eventId: eventId,
             imageUrl: url,
@@ -222,7 +221,7 @@ router.put('/:eventId', requireAuth, validateEventCreation, async (req, res) => 
         name: eventToUpdate.name,
         type: eventToUpdate.type,
         capacity: eventToUpdate.capacity,
-        price: Number(eventToUpdate.price).toFixed(2),
+        price: parseFloat(eventToUpdate.price),
         description: eventToUpdate.description,
         startDate: convertDate(startDate),
         endDate: convertDate(endDate)
@@ -285,7 +284,7 @@ router.get('/:eventId/attendees', async (req, res) => {
                 attributes: ['id', 'firstName', 'lastName']
             }
         });
-    } else {
+    } else if (!statues.includes(currentUser.status.toUpperCase())){
         // If current user is owner or co-host, return all members
         attendees = await Attendee.findAll({
             where: {
@@ -303,7 +302,7 @@ router.get('/:eventId/attendees', async (req, res) => {
             id: attend.User.id,
             firstName: attend.User.firstName,
             lastName: attend.User.lastName,
-            Attendees: {
+            Attendance: {
                 status: attend.status
             }
         });
@@ -355,7 +354,8 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
     if(!event) return res.status(404).json({message: "Event couldn't be found"});
 
     const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
-    if(!currentUser) return res.status(404).json({message: "User couldn't be found"});
+    const memberToUpdate = await Membership.findOne({where: {userId: userId, groupId: event.groupId}});
+    if(!currentUser || !memberToUpdate) return res.status(404).json({message: "User couldn't be found"});
 
     const attending = await Attendee.findOne({where: {userId: userId, eventId: eventId},
     attributes: ['id', 'userId', 'eventId', 'status']});
@@ -363,6 +363,7 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
     if(!attending) return res.status(404).json({message: "Attendance between the user and the event does not exist"});
 
     const statuses = ['owner', 'co-host'];
+    // const memberStatuses = ['member', 'pending'];
     const attendingStatus = ['pending', 'attending', 'waitlist'];
     if(statuses.includes(currentUser.status.toLowerCase()) && attendingStatus.includes(attending.status.toLowerCase()) ) {
         attending.set({
@@ -370,7 +371,7 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
         });
 
         attending.save()
-    } else {
+    } else if (!statuses.includes(currentUser.status.toLowerCase())){
         return res.status(403).json({message: "Forbidden"})
     };
 
@@ -389,19 +390,26 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
     const memberId = req.user.id;
     const userId = req.params.userId;
 
+    const isMember = await Membership.findOne({where: {userId: userId, groupId: event.groupId}});
+    if(!isMember) return res.status(403).json({message: "User couldn't be found"});
+
 
     const event = await Event.findByPk(parseInt(eventId));
     if(!event) return res.status(404).json({message: "Event couldn't be found"});
 
     const currentUser = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
-    if(!currentUser) return res.status(404).json({message: "User couldn't be found"});
+    if(!currentUser) return res.status(403).json({message: "Forbidden"});
     const attending = await Attendee.findOne({where: {userId: userId, eventId: eventId}});
-    // return res.json(currentUser.status)
 
+
+
+    const memberStatuses = ['co-host', 'member', 'pending'];
     if(!attending) return res.status(404).json({message: "Attendance between the user and the event does not exist"});
+    if( memberStatuses.includes(currentUser.status.toLowerCase())) return res.status(403).json({message: "Forbidden"});
 
-    const statuses = ['owner', 'co-host'];
-    if(statuses.includes(currentUser.status.toLowerCase()) || currentUser.userId === Number(memberId)) {
+
+    const statuses = ['owner'];
+    if(currentUser.status.toLowerCase() === 'owner' || currentUser.userId === Number(memberId)) {
         attending.destroy();
         return res.status(200).json({message: "Successfully deleted attendance from event"})
     } else {
