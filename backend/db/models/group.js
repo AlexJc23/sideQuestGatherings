@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Group.belongsTo(
         models.User,
-        {foreignKey: 'organizerId'}
+        {foreignKey: 'organizerId',
+      onDelete: 'cascade',
+    hooks: true}
         );
 
         Group.belongsToMany(
@@ -49,6 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     organizerId: {
       type: DataTypes.INTEGER,
       allowNull: false,
+      references: {model: 'Users'}
     },
     name: {
       type: DataTypes.STRING,
@@ -82,7 +85,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'Group',
-   
+
   });
   return Group;
 };

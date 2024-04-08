@@ -320,21 +320,19 @@ router.get('/:eventId/attendees', async (req, res) => {
 router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     const eventId = req.params.eventId;
     const memberId = req.user.id;
-    const userId = req.user.id
 
 
     const event = await Event.findByPk(parseInt(eventId));
-    if(!event) return res.status(404).json({message: "Event couldn't be found"})
+    if(!event) return res.status(404).json({message: "Event couldn't be found"});
 
-    const currentUser = await Membership.findOne({where: {userId: userId, groupId: event.groupId}})
+    const findMember = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
+    if(!findMember || findMember.status === 'pending') return res.status(403).json({message: "Forbidden"});
+
     const attending = await Attendee.findOne({where: {userId: memberId, eventId: eventId}});
-    // return res.json(currentUser)
-    if(!currentUser) return res.status(403).json({message: "Forbidden"});
 
-    const membership = await Membership.findOne({where: {userId: memberId, groupId: event.groupId}});
-    if(membership.status === 'pending') return res.status(403).json({message: 'Forbidden'})
 
-    if(!attending && currentUser) {
+
+    if(!attending && findMember) {
         const newAttendy = await Attendee.create({
             userId: memberId,
             eventId: eventId,
@@ -345,7 +343,8 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
             userId: newAttendy.userId,
             status: newAttendy.status
         });
-    }
+    };
+
     if(attending.status.toLowerCase() === 'pending') return res.status(400).json({message: "Attendance has already been requested"});
     if(attending.status.toLowerCase() === 'attending') return res.status(400).json({message: "User is already an attendee of the event"});
 
@@ -426,7 +425,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
         }
 
         // Check if the current user is the owner of the event or if they are the user whose attendance is being deleted
-        if (currentUser.status.toLowerCase() === 'owner' || userIdToDelete === currentUserId) {
+        if (currentUser.status.toLowerCase() === 'owner' || userIdToDelete === attending.userId) {
             await attending.destroy();
             return res.status(200).json({ message: "Successfully deleted attendance from event" });
         } else {
