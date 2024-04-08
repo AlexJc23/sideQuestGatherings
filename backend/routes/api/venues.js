@@ -21,9 +21,11 @@ router.put('/:venueId', requireAuth, validateVenueCreation, async (req, res, nex
 
     if(!venueById) return res.status(404).json({message: "Venue couldn't be found"});
 
-    const member = await Membership.findByPk(parseInt(currentUser.id), {where: {
+    const member = await Membership.findOne( {where: {
         groupId: venueById.groupId, userId: currentUser.id
     }});
+
+    if(!member) return res.status(403).json({message: "Forbidden"})
 
     venueById.set({
         address: address,
