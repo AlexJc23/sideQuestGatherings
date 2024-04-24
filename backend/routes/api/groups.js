@@ -293,12 +293,10 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
             return res.status(403).json({ message: "Forbidden" });
         };
 
-        const members = await Membership.findAll({where: {groupId: groupId}});
-        const images = await GroupImage.findAll({where: {groupId: groupId}});
+
         // Delete the group
         await group.destroy();
-        await members.destroy()
-        await images.destroy()
+
         return res.status(200).json({ message: "Successfully deleted" });
 
 
