@@ -13,16 +13,16 @@ module.exports = (sequelize, DataTypes) => {
       Group.belongsTo(
         models.User,
         {foreignKey: 'organizerId',
-      onDelete: 'cascade',
+      onDelete: 'SET NULL',
     hooks: true}
         );
 
-        Group.belongsToMany(
-          models.User,
+        Group.hasMany(
+          models.Membership,
           {
-            through: models.Membership,
             foreignKey: 'groupId',
-            otherKey: 'userId'
+            onDelete: 'CASCADE',
+            hooks: true
           }
         );
 
