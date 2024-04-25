@@ -585,50 +585,44 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
     const groupId = req.params.groupId;
     const { memberId, status } = req.body;
 
+
         // Find the group
         const group = await Group.findByPk(parseInt(groupId));
         if (!group) {
             return res.status(404).json({ message: "Group couldn't be found" });
-        }
+        };
 
-        // Find the current user's membership in the group
-        const currentUserMembership = await Membership.findOne({ where: { userId: userId, groupId: groupId } });
-        if (!currentUserMembership) {
-            return res.status(404).json({ message: "User couldn't be found" });
-        }
+        const currentUser = await User.findByPk(parseInt(userId));
+        if(!currentUser) return res.status(403).json({message: "Forbidden"})
 
-        // Check if the current user is authorized to change the membership status
-        if (!(currentUserMembership.status.toLowerCase() === 'owner' || currentUserMembership.status.toLowerCase() === 'co-host')) {
-            return res.status(403).json({ message: "Forbidden" });
-        }
+        // // Find the current user's membership in the group
+        const member = await User.findByPk(parseInt(memberId));
+        if (!member) return res.status(404).json({ message: "User couldn't be found" });
 
-        // Find the membership to be updated
+        // const currentUserMembership = await Membership.findOne({ where: { userId: memberId, groupId: groupId } });
+        // // Check if the current user is authorized to change the membership status
+
+        const currentMember = await Membership.findOne({where: {userId: userId, groupId: groupId}})
+        if (!currentMember||!(currentMember.status.toLowerCase() === 'owner' || currentMember.status.toLowerCase() === 'co-host')) return res.status(403).json({ message: "Forbidden" });
+        // return res.json(currentMember.status.toLowerCase())
+        // // Find the membership to be updated
         const memberToUpdate = await Membership.findOne({ where: { userId: memberId, groupId: groupId } });
         if (!memberToUpdate) {
             return res.status(404).json({ message: "Membership between the user and the group does not exist" });
         }
 
-        // If the requested status change is to "pending", reject it
-        if (status.toLowerCase() === 'pending') {
-            return res.status(400).json({
-                message: "Bad Request",
-                errors: {
-                    status: "Cannot change a membership status to pending"
-                }
-            });
-        }
 
-        // Check if the current user is authorized to change the membership status to "co-host"
-        if (status.toLowerCase() === 'co-host' && currentUserMembership.status.toLowerCase() !== 'owner') {
-            return res.status(403).json({ message: "Forbidden" });
-        }
+        if (status.toLowerCase() === 'co-host' && currentMember.status.toLowerCase() !== 'owner') {
+                        return res.status(403).json({ message: "Forbidden" });
+                    }
 
-        // Update the membership status
-        memberToUpdate.status = status;
-        await memberToUpdate.save();
 
-        // Return the updated membership details
-        const confirmedChange = {
+            // Update the membership status
+            memberToUpdate.status = status;
+            await memberToUpdate.save();
+
+            // Return the updated membership details
+            const confirmedChange = {
             id: memberToUpdate.id,
             groupId: memberToUpdate.groupId,
             memberId: memberToUpdate.userId,
