@@ -48,14 +48,14 @@ const validateEmailandUser = [
         .custom(async (value) => {
             const user = await User.findOne({ where: { email: value } });
             if (user) {
-                throw new Error('Email already exists');
+                throw new Error('User with that email already exists');
             }
         }),
     check('username')
         .custom(async (value) => {
             const user = await User.findOne({ where: { username: value } });
             if (user) {
-                throw new Error('Username already exists');
+                throw new Error('User with that username already exists');
             }
         }),
 
