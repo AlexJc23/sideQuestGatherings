@@ -399,38 +399,51 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
 
 });
 
+
+//delete attendance by specified Id
 router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
-    const eventId = req.params.eventId;
-    const currentUserId = req.user.id;
-    const userIdToDelete = req.params.userId;
+    const { eventId, userId } = req.params;
+    const currentUser = req.user.id;
 
-    const event = await Event.findByPk(parseInt(eventId));
-        if (!event) {
-            return res.status(404).json({ message: "Event couldn't be found" });
-        }
+    //find current event
+    const event = await Event.findByPk(eventId);
 
-        const isMember = await Membership.findOne({ where: { userId: userIdToDelete, groupId: event.groupId } });
-        if (!isMember) {
-            return res.status(404).json({ message: "User couldn't be found" });
-        }
+    //if no event exists return 404 error message
+    if (!event) return res.status(404).json({message: "Event couldn't be found"});
 
-        const currentUser = await Membership.findOne({ where: { userId: currentUserId, groupId: event.groupId } });
-        if (!currentUser) {
-            return res.status(403).json({ message: "Forbidden" });
-        }
+    //find the group that the event belongs to...
+    const group = await Group.findByPk(event.groupId);
 
-        const attending = await Attendee.findOne({ where: { userId: userIdToDelete, eventId: eventId } });
-        if (!attending) {
-            return res.status(404).json({ message: "Attendance does not exist for this User" });
-        }
+    // find the member to delete if exists
+    const userToFind = await User.findByPk(userId);
 
-        // Check if the current user is the owner of the event or if they are the user whose attendance is being deleted
-        if (currentUser.status.toLowerCase() === 'owner' || userIdToDelete === attending.userId) {
-            await attending.destroy();
-            return res.status(200).json({ message: "Successfully deleted attendance from event" });
-        } else {
-            return res.status(403).json({ message: "Forbidden" });
+    //find our attendace to delete
+    const attendanceToDelete = await Attendee.findOne({ where: {eventId: eventId, userId: userId }})
+
+    //if no member was found return with 404 error message
+    if (!userToFind) return res.status(404).json({message: "User couldn't be found"})
+
+    //if no attendace exists return with 404 error message
+    if (!attendanceToDelete) return res.status(404).json({message: "Attendance does not exist for this User"})
+
+
+    //delete own attendance
+    if (parseInt(userId) === parseInt(currentUser)) {
+        const attendingUser = await Attendee.findOne({where: {userId: currentUser,eventId: eventId}
+    })
+        if (attendingUser) {
+            await attendingUser.destroy();
+            return res.status(200).json({message: "Successfully deleted attendance from event"})
         }
+    }
+
+    // if current user isnt the owner of the event, send them to the shadow realm!!!
+    if (group.organizerId !== currentUser) return res.status(403).json({message: "Forbidden"})
+
+
+    await attendanceToDelete.destroy();
+
+    return res.status(200).json({message: "Successfully deleted attendance from the event"});
 });
 
 

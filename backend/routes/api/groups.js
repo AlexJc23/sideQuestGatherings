@@ -633,33 +633,40 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
 });
 
 router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res, next) => {
-    const memberId = req.params.memberId;
-    const currentUserId = req.user.id;
-    const groupId = req.params.groupId;
+    const { groupId, memberId } = req.params
+    const currentUser = req.user.id;
 
-    const group = Group.findByPk(parseInt(groupId));
-    if(!group) return res.status(404).json({message: "Group couldn't be found"});
+    const group = await Group.findByPk(groupId);
 
-    const currentUser = await Membership.findOne({where: {userId : currentUserId, groupId: groupId, status: 'owner'}});
-    if(!currentUser) return res.status(403).json({message: "Forbidden"});
+    const currentMemberUser = await User.findByPk(memberId);
 
-    const memberExists = await User.findByPk(parseInt(memberId));
-    if(!memberExists) return res.status(404).json({message: "User couldn't be found"});
+    const memberToDelete = await Membership.findOne({where : {userId: memberId, groupId: groupId}})
 
-    const findMember = await Membership.findOne({where: {userId: memberId, groupId: groupId}});
-    if(!findMember) return res.status(404).json({message: "Membership does not exist for this User"});
+    //if no group exists return 404 error
+    if (!group) return res.status(404).json({message: "Group couldn't be found"})
 
-    if(currentUser.status.toLowerCase() === 'owner') {
-        findMember.destroy()
-        return res.status(200).json({message: "Successfully deleted membership from group"})
-    };
+    //if there isnt a user with specified memberId return 404 error
+    if (!currentMemberUser) return res.status(404).json({message: "User couldn't be found"})
 
-    if(parseInt(memberId) === findMember.userId) {
-        findMember.destroy()
-        return res.status(200).json({message: "Successfully deleted membership from group"})
-    } else {
-        return res.status(403).json({message: "Forbidden"})
+    //if there isnt a membership associated to this group return 404 error
+    if (!memberToDelete) return res.status(404).json({message: "Membership does not exist for this User"})
+
+
+    //delete own membership
+    if (parseInt(currentUser) === parseInt(memberId)) {
+        await memberToDelete.destroy();
+        return res.status(200).json({
+            message: "Successfully deleted membership from group"
+        })
     }
+
+    //if current user isnt the owner... send them to the shadow realm!!!
+    if (group.organizerId !== currentUser) return res.status(403).json({message: "Forbidden"})
+
+
+    await memberToDelete.destroy();
+
+    return res.status(200).json({message: "Successfully deleted membership from group"})
 
 });
 
