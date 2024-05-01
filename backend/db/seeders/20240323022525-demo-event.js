@@ -51,7 +51,7 @@ module.exports = {
         groupId: 3,
         venueId: 3,
         name: 'Test3',
-        type: 'In person',
+        type: 'In Person',
         capacity: 45,
         price: 89.00,
         description: 'TEST3',

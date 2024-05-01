@@ -11,7 +11,7 @@ const { validateEventCreation, validateAttendanceStatus, validateQueries } = req
 
 const router = express.Router();
 
-
+//get all events
 router.get('/', validateQueries, async (req, res) => {
     let { page, size, name, type, startDate } = req.query;
 
@@ -70,7 +70,7 @@ router.get('/', validateQueries, async (req, res) => {
         allEvents.push({
             id: event.id,
             groupId: event.groupId,
-            venueId: event.venueId,
+            venueId: event.venueId ? event.venueId : null,
             name: event.name,
             type: event.type,
             startDate: convertDate(event.startDate),
@@ -276,7 +276,7 @@ router.get('/:eventId/attendees', async (req, res) => {
     let attendees;
 
     const statues = ['member', 'pending']
-    if (!currentUser || statues.includes(currentUser.status.toUpperCase())) {
+    if (!currentUser || statues.includes(currentUser.status.toLowerCase())) {
         // If current user is not a member yet or is pending, return all non-pending members
         attendees = await Attendee.findAll({
             where: {
@@ -288,7 +288,7 @@ router.get('/:eventId/attendees', async (req, res) => {
                 attributes: ['id', 'firstName', 'lastName']
             }
         });
-    } else if (!statues.includes(currentUser.status.toUpperCase())){
+    } else if (!statues.includes(currentUser.status.toLowerCase())){
         // If current user is owner or co-host, return all members
         attendees = await Attendee.findAll({
             where: {
@@ -437,7 +437,7 @@ router.delete('/:eventId/attendance/:userId', requireAuth, async (req, res) => {
     }
 
     // if current user isnt the owner of the event, send them to the shadow realm!!!
-    if (group.organizerId !== currentUser) return res.status(403).json({message: "Forbidden"})
+    if (group.organizerId !== currentUser) return res.status(403).json({message: "Only the User or organizer may delete an Attendance"})
 
 
     await attendanceToDelete.destroy();
