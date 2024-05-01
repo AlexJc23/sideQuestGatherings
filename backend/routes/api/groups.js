@@ -302,6 +302,8 @@ router.delete('/:groupId', requireAuth, async (req, res, next) => {
 
 });
 
+
+//get all venues by group Id
 router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
     const groupId = req.params.groupId;
     const userId = req.user.id;
@@ -328,8 +330,8 @@ router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
             address: venue.address,
             city: venue.city,
             state: venue.state,
-            lat: venue.latitude,
-            lng: venue.longitude
+            lat: Number(venue.latitude),
+            lng: Number(venue.longitude)
         })
 
     }
@@ -338,6 +340,7 @@ router.get('/:groupId/venues', requireAuth, async (req, res, next) => {
 
 });
 
+//create a venue by group Id
 router.post('/:groupId/venues', requireAuth, validateVenueCreation, async (req, res, next) => {
     const groupId = req.params.groupId;
     const currentUser = req.user;
@@ -539,6 +542,7 @@ router.get('/:groupId/members', async (req, res) => {
     return res.status(200).json({ Members: membersOfGroupId });
 });
 
+//request membership to groupId
 router.post('/:groupId/membership', requireAuth, async (req, res) => {
 
     const memberId = req.user.id;
@@ -580,6 +584,7 @@ router.post('/:groupId/membership', requireAuth, async (req, res) => {
 
 });
 
+//change membership
 router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(req, res, next) => {
     const userId = req.user.id;
     const groupId = req.params.groupId;
@@ -597,7 +602,7 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
 
         // // Find the current user's membership in the group
         const member = await User.findByPk(parseInt(memberId));
-        if (!member) return res.status(404).json({ message: "User couldn't be found" });
+        if (!member) return res.status(400).json({ message: "User couldn't be found" });
 
         // const currentUserMembership = await Membership.findOne({ where: { userId: memberId, groupId: groupId } });
         // // Check if the current user is authorized to change the membership status
@@ -632,6 +637,7 @@ router.put('/:groupId/membership', requireAuth, validateMemberCreation, async(re
 
 });
 
+//delete specified membership by membership id
 router.delete('/:groupId/membership/:memberId', requireAuth, async (req, res, next) => {
     const { groupId, memberId } = req.params
     const currentUser = req.user.id;
