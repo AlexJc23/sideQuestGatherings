@@ -153,9 +153,7 @@ router.post('/:eventId/images', requireAuth, async (req, res) => {
             userId: currentUser.id
         }
     });
-    if (!member || member.status.toLowerCase() === 'pending') {
-        return res.status(403).json({ message: 'Forbidden' });
-    }
+    if (!member || member.status.toLowerCase() === 'pending') return res.status(403).json({ message: 'Forbidden' });
 
     const attendee = await Attendee.findOne({
         where: {
@@ -348,6 +346,8 @@ router.post('/:eventId/attendance', requireAuth, async (req, res) => {
     if(attending.status.toLowerCase() === 'attending') return res.status(400).json({message: "User is already an attendee of the event"});
 
 });
+
+//change the attendance status to an event
 router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async (req, res) => {
     const eventId = req.params.eventId;
     const currentUserId = req.user.id;
@@ -373,7 +373,7 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
         }
 
         // Check if the attendance between the user and the event exists
-        const attending = await Attendee.findOne({ where: { userId: userId, eventId: eventId } });
+        const attending = await Attendee.findOne({ where: { userId: userId, eventId: eventId }, attributes: ['id', "userId", "eventId", "status"] });
         if (!attending) {
             return res.status(404).json({ message: "Attendance between the user and the event does not exist" });
         }
@@ -388,11 +388,12 @@ router.put('/:eventId/attendance', requireAuth, validateAttendanceStatus, async 
         attending.status = status;
         await attending.save();
 
+
         // Return the updated attendance details
         return res.json({
             id: attending.id,
-            eventId: attending.eventId,
             userId: attending.userId,
+            eventId: attending.eventId,
             status: attending.status
         });
 
