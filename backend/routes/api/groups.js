@@ -114,6 +114,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 
 });
 
+//get details of groups by id
 router.get('/:groupId', requireAuth, async (req, res) => {
     const { groupId } = req.params;
     let groupById = await Group.findByPk(parseInt(groupId))
@@ -150,15 +151,15 @@ router.get('/:groupId', requireAuth, async (req, res) => {
             preview: groupimg.preview
         })),
         Organizer: groupById.User,
-        Venues: groupById.Venues.map(venue => ({
-                id: venue.id,
-                groupId: venue.groupId,
-                address: venue.address,
-                city: venue.city,
-                state: venue.state,
-                lat: Number(venue.latitude),
-                lng: Number(venue.longitude)
-            }))
+        Venues: groupById.Venues.length > 0 ? groupById.Venues.map(venue => ({
+            id: venue.id,
+            groupId: venue.groupId,
+            address: venue.address,
+            city: venue.city,
+            state: venue.state,
+            lat: Number(venue.latitude),
+            lng: Number(venue.longitude)
+        })) : null
     };
     res.json(groupData)}
 });
