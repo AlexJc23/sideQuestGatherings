@@ -1,0 +1,22 @@
+#login-form {
+    border: 1px solid orange;
+    display: flex;
+    flex-direction: column;
+
+}
+
+
+#login-form {
+    margin: auto;
+    max-width: 400px;
+    border: 1px blue dotted;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-self: center;
+}
+section {
+    display: flex;
+    flex-direction: column;
+
+}
