@@ -1,0 +1,11 @@
+.profile-dropdown {
+
+    border: 1px black solid;
+    display: flex;
+    flex-direction: column;
+    max-width: 14rem;
+    min-width: 10rem;
+    padding: 40px
+}
+
+

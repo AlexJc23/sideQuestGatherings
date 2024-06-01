@@ -26,7 +26,7 @@ const removeUser = () => {
 //   }
 // }
 
-
+// login user with provided creds
 export const login = (user) => async (dispatch) => {
   const { credential, password } = user;
   const response = await csrfFetch("/api/session", {
@@ -41,6 +41,7 @@ export const login = (user) => async (dispatch) => {
   return response;
 };
 
+//restore current user cookies
 export const restoreUser = () => async (dispatch) => {
   const res = await csrfFetch('/api/session')
 
@@ -51,6 +52,7 @@ export const restoreUser = () => async (dispatch) => {
   return res;
 }
 
+// signup use using payload
 export const signup = (user) => async (dispatch) => {
   const { username, firstName, lastName, email, password } = user;
   const res = await csrfFetch("/api/users", {
@@ -70,6 +72,21 @@ export const signup = (user) => async (dispatch) => {
   }
   return res;
 };
+
+//logout the user and the cookies
+export const logoutUser = () => async (dispatch) => {
+  const res = await csrfFetch('/api/session', {
+    method: 'DELETE'
+  });
+
+  if(res.ok) {
+    const data = await res.json();
+    dispatch(removeUser())
+    return res
+  }
+
+}
+
 
 const initialState = { user: null };
 
