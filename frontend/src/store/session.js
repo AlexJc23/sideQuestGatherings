@@ -82,9 +82,9 @@ export const logoutUser = () => async (dispatch) => {
   if(res.ok) {
     const data = await res.json();
     dispatch(removeUser())
-    return data
+    return res
   }
-  return res
+
 }
 
 
