@@ -1,7 +1,4 @@
-//The OpenModalMenuItem component code should look exactly like the OpenModalButton component code except:
 
-// change the buttonText prop to itemText
-// change the onButtonClick prop to onItemClick
 
 import { useModal } from "../../context/Modal";
 
