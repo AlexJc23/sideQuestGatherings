@@ -80,7 +80,7 @@ export const logoutUser = () => async (dispatch) => {
   });
 
   if(res.ok) {
-    const data = await res.json();
+    // const data = await res.json();
     dispatch(removeUser())
     return res
   }
