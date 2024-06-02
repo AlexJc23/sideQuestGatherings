@@ -1,5 +1,6 @@
 .hidden {
     visibility: hidden;
+    position: absolute;
 
 }
 .profile-dropdown {

@@ -31,6 +31,10 @@ const router = createBrowserRouter([
       {
         path: '/',
         element: <h1>Welcome!</h1>
+      },
+      {
+        path: '*',
+        element: <h1>404 go back bucko</h1>
       }
     ]
   }
