@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { useModal } from '../../context/Modal';
 import * as sessionActions from '../../store/session';
@@ -13,7 +13,25 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
+  const [userErrors, setUserErrors] = useState({});
+
   const { closeModal } = useModal();
+
+  useEffect(() => {
+    const userErr = {};
+    // const
+
+    if(!email.includes('@')) userErr['email'] = '* Enter a valid email.';
+    if(username.length <=6) userErr['username'] ='* Username must be 6 characters or longer.'
+    if(firstName.length <= 3) userErr['firstName'] = '* Enter your first name.';
+    if(lastName.length <= 3) userErr['lastName'] = '* Enter your last name.';
+    if(password.length <= 6) userErr['password'] = '* Password must be 6 Characters or more.';
+    if (!password.match(/[!@#$%^&*(),.?":{}|<>]/)) userErr['password'] = '* Password must contain at least one special character';
+    if(password !== confirmPassword) userErr['confirmPassword'] = '* Passwords must match.'
+
+    setUserErrors(userErr)
+
+  }, [email, username, firstName, lastName, password, confirmPassword])
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -55,6 +73,7 @@ function SignupFormModal() {
             required
           />
         </label>
+        <p className='errors'>{userErrors.email}</p>
         {errors.email && <p>{errors.email}</p>}
         <section className='form-input'>
           <label>
@@ -66,6 +85,7 @@ function SignupFormModal() {
               required
             />
           </label>
+          <p className='errors'>{userErrors.username}</p>
         {errors.username && <p>{errors.username}</p>}
         </section>
         <section className='form-input'>
@@ -78,6 +98,7 @@ function SignupFormModal() {
               required
             />
           </label>
+          <p className='errors'>{userErrors.firstName}</p>
           {errors.firstName && <p>{errors.firstName}</p>}
         </section>
         <section className='form-input'>
@@ -90,6 +111,7 @@ function SignupFormModal() {
               required
             />
           </label>
+          <p className='errors'>{userErrors.lastName}</p>
           {errors.lastName && <p>{errors.lastName}</p>}
         </section>
         <section className='form-input'>
@@ -102,6 +124,7 @@ function SignupFormModal() {
               required
             />
           </label>
+          <p className='errors'>{userErrors.password}</p>
           {errors.password && <p>{errors.password}</p>}
         </section>
         <section className='form-input'>
@@ -114,11 +137,12 @@ function SignupFormModal() {
             required
           />
         </label>
+        <p className='errors'>{userErrors.confirmPassword}</p>
         </section>
         {errors.confirmPassword && (
           <p>{errors.confirmPassword}</p>
         )}
-        <button type="submit">Sign Up</button>
+        <button disabled={Object.keys(userErrors).length} type="submit">Sign Up</button>
       </form>
     </div >
   );

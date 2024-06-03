@@ -1,7 +1,6 @@
 /* TODO: Add sitewide styles */
 li {
     list-style: none;
-    font-size: 1rem;
 }
 
 h1 {
@@ -23,6 +22,7 @@ button {
 body{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1rem;
+    font-weight: 100;
 }
 
 label {
@@ -37,4 +37,11 @@ input {
     padding: 10px 15px;
     border-radius: 5px;
     border: 1px solid rgb(205, 205, 205);
+}
+
+.errors {
+    color: red;
+    font-weight: 100;
+    font-size: 12px;
+    margin: 4px 0;
 }
