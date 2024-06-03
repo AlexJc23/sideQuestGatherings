@@ -54,11 +54,14 @@
     border: 1px black solid;
     display: flex;
     flex-direction: column;
-    min-width: 9rem;
+    width: 8rem;
     padding: 40px;
     position: absolute;
     top: 75px;
     right: 35px
+}
+.profile-dropdown li {
+    margin: 10px 0;
 }
 
 .pfp{
