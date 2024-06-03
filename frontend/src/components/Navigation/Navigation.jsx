@@ -22,18 +22,18 @@ function Navigation({ isLoaded }) {
         <ProfileButton user={sessionUser} />
       </li>) : (
         <ul className='action-btns' >
-          <li className='left-actn'>
+          <div className='left-actn'>
           <OpenModalMenuItem
           itemText={"Log In"}
           modalComponent={<LoginFormModal />}
           />
-          </li>
-          <li className='right-actn'>
+          </div>
+          <div className='right-actn'>
           <OpenModalMenuItem
           itemText={'Sign Up'}
           modalComponent={<SignupFormModal/>}
           />
-          </li>
+          </div>
         </ ul>
       )
     }

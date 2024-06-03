@@ -29,7 +29,7 @@ function LoginFormModal() {
 
   return (
     <div className='login-form'>
-      <img className='login-img' src='../../public/BlueLogo.svg'/>
+      <img className='login-img' src='/BlueLogo.svg'/>
       <h1 className='header-login'>Log In</h1>
       <form onSubmit={handleSubmit}>
         <section className='form-input'>

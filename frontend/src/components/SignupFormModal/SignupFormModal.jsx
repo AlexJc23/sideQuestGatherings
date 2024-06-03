@@ -43,7 +43,7 @@ function SignupFormModal() {
 
   return (
     <div className='signup-form' >
-       <img className='signup-img' src='../../public/BlueLogo.svg'/>
+       <img className='signup-img' src='/BlueLogo.svg'/>
       <h1 className='header-signup'>Sign Up</h1>
       <form onSubmit={handleSubmit}>
         <label>
