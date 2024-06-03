@@ -15,7 +15,7 @@ function Navigation({ isLoaded }) {
   return (
     <ul className='nav-bar' >
       <li >
-        <NavLink to="/"><img className='nav-img' src='./public/monogrambluelogo.svg' alt='home logo'/></NavLink>
+        <NavLink to="/"><img className='nav-img' src='/monogrambluelogo.svg' alt='home logo'/></NavLink>
       </li>
       {isLoaded && sessionUser ?
       (<li>
