@@ -1,6 +1,6 @@
 /* main nav */
 .nav-bar {
-    border: 1px solid red;
+    /* border: 1px solid red; */
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -47,6 +47,20 @@
     padding: 8px 13px;
 }
 
+
+
+
+.profile-dropdown {
+    border: 1px black solid;
+    display: flex;
+    flex-direction: column;
+    min-width: 9rem;
+    padding: 40px;
+    position: absolute;
+    top: 75px;
+    right: 35px
+}
+
 .pfp{
     background-color: white;
     gap: 5px;
@@ -58,30 +72,4 @@
 .hidden {
     visibility: hidden;
     position: absolute;
-}
-
-
-.profile-dropdown {
-    border: 1px black solid;
-    display: flex;
-    flex-direction: column;
-
-    min-width: 9rem;
-    padding: 40px;
-    position: absolute;
-    top: 75px;
-    right: 35px
-}
-
-
-
-.prof-btn:hover  {
-    color: gray;
-}
-.prof-btn {
-    border-radius: 0rem;
-    font-size: 3rem;
-    border: none;
-    background: none;
-
 }
