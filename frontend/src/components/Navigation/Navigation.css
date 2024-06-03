@@ -12,14 +12,14 @@
 .nav-img {
     width: 250px;
     padding-left: 0;
-    /* border: 1px solid blue; */
+
 }
 
 .action-btns {
     display: flex;
     gap: 20px;
     align-items: center;
-    /* border: 1px solid yellow; */
+
     margin: 0 5px;
 }
 
@@ -49,27 +49,37 @@
 
 
 
-
-.profile-dropdown {
-    border: 1px black solid;
-    display: flex;
-    flex-direction: column;
-    width: 8rem;
-    padding: 40px;
-    position: absolute;
-    top: 75px;
-    right: 35px
-}
-.profile-dropdown li {
-    margin: 10px 0;
-}
-
 .pfp{
     background-color: white;
     gap: 5px;
     border: none;
     display: flex;
     align-items: center;
+}
+
+.profile-dropdown {
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px, rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+    border: 1px rgb(170, 170, 170) solid;
+    display: flex;
+    flex-direction: column;
+    width: 8rem;
+    padding: 20px 40px 20px 15px;
+    position: absolute;
+    top: 75px;
+    right: 25px
+}
+.profile-dropdown li {
+    margin: 10px 0;
+    /* cursor: pointer; */
+    padding-right: 0;
+}
+
+#root > ul > li:nth-child(2) > ul > li:nth-child(4):hover {
+    margin: 10px 0;
+    color: #f8c67a;
+    cursor: pointer;
+    padding-right: 0;
+    /* border: solid 1px red; */
 }
 
 .hidden {
