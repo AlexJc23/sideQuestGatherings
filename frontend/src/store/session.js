@@ -36,8 +36,10 @@ export const login = (user) => async (dispatch) => {
       password
     })
   });
-  const data = await response.json();
-  dispatch(setUser(data.user));
+  if (res.ok) {
+    const data = await response.json();
+    dispatch(setUser(data.user));
+  }
   return response;
 };
 
@@ -48,6 +50,7 @@ export const restoreUser = () => async (dispatch) => {
   if(res.ok) {
     const data = await res.json();
     dispatch(setUser(data.user))
+    return data
   }
   return res;
 }
