@@ -42,8 +42,9 @@ function SignupFormModal() {
   };
 
   return (
-    <>
-      <h1>Sign Up</h1>
+    <div className='signup-form' >
+       <img className='signup-img' src='../../public/BlueLogo.svg'/>
+      <h1 className='header-signup'>Sign Up</h1>
       <form onSubmit={handleSubmit}>
         <label>
           Email
@@ -55,46 +56,55 @@ function SignupFormModal() {
           />
         </label>
         {errors.email && <p>{errors.email}</p>}
-        <label>
-          Username
-          <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            required
-          />
-        </label>
+        <section className='form-input'>
+          <label>
+            Username
+            <input
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              required
+            />
+          </label>
         {errors.username && <p>{errors.username}</p>}
-        <label>
-          First Name
-          <input
-            type="text"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-            required
-          />
-        </label>
-        {errors.firstName && <p>{errors.firstName}</p>}
-        <label>
-          Last Name
-          <input
-            type="text"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-            required
-          />
-        </label>
-        {errors.lastName && <p>{errors.lastName}</p>}
-        <label>
-          Password
-          <input
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </label>
-        {errors.password && <p>{errors.password}</p>}
+        </section>
+        <section className='form-input'>
+          <label>
+            First Name
+            <input
+              type="text"
+              value={firstName}
+              onChange={(e) => setFirstName(e.target.value)}
+              required
+            />
+          </label>
+          {errors.firstName && <p>{errors.firstName}</p>}
+        </section>
+        <section className='form-input'>
+          <label>
+            Last Name
+            <input
+              type="text"
+              value={lastName}
+              onChange={(e) => setLastName(e.target.value)}
+              required
+            />
+          </label>
+          {errors.lastName && <p>{errors.lastName}</p>}
+        </section>
+        <section className='form-input'>
+          <label>
+            Password
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+            />
+          </label>
+          {errors.password && <p>{errors.password}</p>}
+        </section>
+        <section className='form-input'>
         <label>
           Confirm Password
           <input
@@ -104,12 +114,13 @@ function SignupFormModal() {
             required
           />
         </label>
+        </section>
         {errors.confirmPassword && (
           <p>{errors.confirmPassword}</p>
         )}
         <button type="submit">Sign Up</button>
       </form>
-    </>
+    </div >
   );
 }
 

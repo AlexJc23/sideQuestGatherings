@@ -5,6 +5,7 @@ import * as sessionActions from '../../store/session';
 import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
+import { BsChevronDown, BsChevronUp } from "react-icons/bs";
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -38,12 +39,16 @@ function ProfileButton({ user }) {
     closeMenu();
   };
 
+
+
+
+
   const ulClassName = "profile-dropdown" + (showMenu ? "" : " hidden");
 
   return (
     <>
-      <button onClick={toggleMenu}>
-        <FaUserCircle />
+      <button className='pfp' style={{fontSize: '40px', color: 'black'}} onClick={toggleMenu}>
+        <FaUserCircle /> {showMenu ? <span style={{fontSize: '15px', paddingTop: '5px'}}><BsChevronUp /></span> : <span style={{fontSize: '15px', paddingTop: '5px'}}><BsChevronDown /></span>}
       </button>
       <ul className={ulClassName} ref={ulRef}>
         {user ? (

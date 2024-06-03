@@ -1,22 +1,42 @@
-#login-form {
-    border: 1px solid orange;
-    display: flex;
-    flex-direction: column;
-
+.header-login{
+    font-size: 2rem;
 }
 
-
-#login-form {
-    margin: auto;
-    max-width: 400px;
-    border: 1px blue dotted;
-    display: flex;
-    flex-direction: column;
+.login-form {
     align-items: center;
-    justify-self: center;
-}
-section {
     display: flex;
     flex-direction: column;
+    font-weight: bold;
+    height: 100vh;
+    justify-content: center;
+    padding: 100px;
+}
 
+.login-form button {
+    align-self: center;
+    border: #00558A;
+    background-color: #00558A;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 16px 0 0;
+    padding: 10px 12px;
+    width: 100%;
+}
+.login-form button:hover {
+    align-self: center;
+    border: #036fb3;
+    background-color: #036fb3;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 16px 0 0;
+    padding: 10px 12px;
+    width: 100%;
+}
+
+.login-img {
+    width: 100px;
+}
+
+.form-input {
+    margin: 33px 0;
 }
