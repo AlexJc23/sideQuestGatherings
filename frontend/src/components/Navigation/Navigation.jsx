@@ -15,22 +15,26 @@ function Navigation({ isLoaded }) {
   return (
     <ul className='nav-bar' >
       <li >
-        <NavLink to="/">Home</NavLink>
+        <NavLink to="/"><img className='nav-img' src='./public/monogrambluelogo.svg' alt='home logo'/></NavLink>
       </li>
       {isLoaded && sessionUser ?
       (<li>
         <ProfileButton user={sessionUser} />
       </li>) : (
-        <div >
+        <ul className='action-btns' >
+          <li className='left-actn'>
           <OpenModalMenuItem
           itemText={"Log In"}
           modalComponent={<LoginFormModal />}
           />
+          </li>
+          <li className='right-actn'>
           <OpenModalMenuItem
           itemText={'Sign Up'}
           modalComponent={<SignupFormModal/>}
           />
-        </ div>
+          </li>
+        </ ul>
       )
     }
     </ul>

@@ -1,0 +1,36 @@
+.signup-form {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    height: 100vh;
+    justify-content: center;
+    padding: 100px;
+    overflow: auto;
+}
+
+.signup-form button {
+    align-self: center;
+    border: #00558A;
+    background-color: #00558A;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 16px 0 100px 0;
+    padding: 10px 12px;
+    width: 100%;
+}
+.signup-form button:hover {
+    align-self: center;
+    border: #036fb3;
+    background-color: #036fb3;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin: 16px 0 100px 0;
+    padding: 10px 12px;
+    width: 100%;
+}
+
+.signup-img {
+    margin-top: 300px;
+    width: 100px;
+}
