@@ -17,7 +17,14 @@ function LoginFormModal() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const errs = {};
     setErrors({});
+    if(credential.length <= 4) errs['credential'] = '* Please enter your Username or Email';
+
+    if(password.length <= 6) errs['password'] = '* Please enter your Password';
+
+    setErrors(errs)
+
     return dispatch(sessionActions.login({ credential, password }))
       .then(closeModal)
       .catch(async (res) => {
@@ -28,14 +35,7 @@ function LoginFormModal() {
       });
   };
 
-  useEffect(() => {
-    const errs = {};
-    if(credential.length <= 3) errs['credential'] = '* Please enter your Username or Email';
 
-    if(password.length <= 3) errs['password'] = '* Please enter your Password';
-
-    setUserErrors(errs)
-  }, [credential, password])
 
   return (
     <div className='login-form'>
@@ -52,7 +52,7 @@ function LoginFormModal() {
               required
             />
           </label>
-          <p className='errors'>{userErrors.credential}</p>
+          {errors.credential && ( <p className='errors'>{errors.credential}</p>)}
         </section>
         <section className='form-input'>
           <label>
@@ -64,12 +64,9 @@ function LoginFormModal() {
               required
             />
           </label>
-          <p className='errors'>{userErrors.password}</p>
+          {errors.password && ( <p className='errors'>{errors.password}</p>)}
         </section>
-        {errors.credential && (
-          <p>{errors.credential}</p>
 
-        )}
         <button disabled={Object.keys(userErrors).length} type="submit">Log In</button>
       </form>
     </div>

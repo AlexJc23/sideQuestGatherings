@@ -1,10 +1,9 @@
 /* main nav */
 .nav-bar {
-    /* border: 1px solid red; */
+    border-bottom: solid 1px rgb(196, 196, 196);
     display: flex;
     justify-content: space-between;
     align-items: center;
-    /* padding: 0 15px; */
     margin: 0;
     overflow: hidden;
     height: 70px;
@@ -66,7 +65,9 @@
     padding: 20px 40px 20px 15px;
     position: absolute;
     top: 75px;
-    right: 25px
+    right: 25px;
+
+
 }
 .profile-dropdown li {
     margin: 10px 0;
