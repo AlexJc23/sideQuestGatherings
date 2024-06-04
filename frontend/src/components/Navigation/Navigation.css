@@ -54,6 +54,14 @@
     border: none;
     display: flex;
     align-items: center;
+    margin-right: 10px;
+}
+.pfp:hover {
+    background-color: white;
+    gap: 5px;
+    border: none;
+    display: flex;
+    align-items: center;
 }
 
 .profile-dropdown {
@@ -64,7 +72,7 @@
     width: 8rem;
     padding: 20px 40px 20px 15px;
     position: absolute;
-    top: 75px;
+    top: 78px;
     right: 25px;
 
 

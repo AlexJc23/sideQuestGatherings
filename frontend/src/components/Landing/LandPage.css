@@ -66,6 +66,18 @@
 .sect3 p {
     text-align: center;
 }
+
+.sect3-navlink {
+    text-decoration: none;
+    color: #01558A;
+}
+
+.sect3-navlink:hover {
+    text-decoration: none;
+    color: #FABA55;
+}
+
+/* section 4 */
 .sctn4 {
     margin: 20px auto;
 }
