@@ -4,17 +4,17 @@ li {
 }
 
 h1 {
-    font-size: 24px;
+    /* font-size: 24px; */
     font-weight: bold;
 }
 button {
     box-sizing: border-box;
-    background-color: #00798A;
+    background-color: #01558A;
     color: white;
     width: fit-content;
     padding: 8px 16px;
     border-radius: 8px;
-    border: 1px #00798a solid;
+    border: 1px #01558A solid;
     box-shadow: none;
     cursor: pointer;
     font-size: 16px;
@@ -23,6 +23,7 @@ body{
     font-family: Arial, Helvetica, sans-serif;
     font-size: 1rem;
     font-weight: 100;
+
 }
 
 label {
