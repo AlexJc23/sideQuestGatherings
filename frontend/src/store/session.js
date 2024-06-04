@@ -29,7 +29,7 @@ const removeUser = () => {
 // login user with provided creds
 export const login = (user) => async (dispatch) => {
   const { credential, password } = user;
-  const response = await csrfFetch("/api/session", {
+  const res = await csrfFetch("/api/session", {
     method: "POST",
     body: JSON.stringify({
       credential,
@@ -37,10 +37,10 @@ export const login = (user) => async (dispatch) => {
     })
   });
   if (res.ok) {
-    const data = await response.json();
+    const data = await res.json();
     dispatch(setUser(data.user));
   }
-  return response;
+  return res;
 };
 
 //restore current user cookies
