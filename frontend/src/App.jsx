@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation';
-import AllGroups from './components/Groups/AllGroups';
+import GroupMain from './components/Groups/GroupEventMain';
 import * as sessionActions from './store/session';
 
 import LandingPage from './components/Landing/LandingPage';
@@ -36,7 +36,11 @@ const router = createBrowserRouter([
       },
       {
         path: '/groups',
-        element: <AllGroups />
+        element: <GroupMain />
+      },
+      {
+        path: `/groups/:groupId`,
+        element: <h1>Under Construction</h1>
       },
       {
         path: '*',
