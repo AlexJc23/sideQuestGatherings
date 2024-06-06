@@ -19,12 +19,7 @@ const removeUser = () => {
   };
 };
 
-// const addUser = (payload) => {
-//   return {
-//     type: ADD_USER,
-//     payload
-//   }
-// }
+
 
 // login user with provided creds
 export const login = (user) => async (dispatch) => {
@@ -89,6 +84,8 @@ export const logoutUser = () => async (dispatch) => {
   }
 
 }
+
+
 
 
 const initialState = { user: null };
