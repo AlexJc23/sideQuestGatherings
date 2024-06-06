@@ -1,4 +1,4 @@
-import {Link} from 'react-router-dom'
+import {NavLink} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
 import GroupCards from './groupcards';
 import { useEffect } from 'react';
@@ -19,11 +19,11 @@ const GroupMain = () => {
     return (
         <div className='group-event-main'>
             <div className='group-event-header'>
-                <Link className='events-head' to={'/events'}>Events</Link>
-                <Link className='groups-head' to={'/groups'}>Groups</Link>
+                <NavLink className='events-head' to={'/events'}>Events</NavLink>
+                <NavLink className='groups-head' to={'/groups'}>Groups</NavLink>
             </div>
             <div className='group-event-subheader'>
-                <p>Groups in Side Quest Gatherings</p>
+                <p>Groups in S.Q.G.</p>
             </div>
             <div className='cards'>
             {allGroups.map(group => (

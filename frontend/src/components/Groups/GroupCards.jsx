@@ -15,7 +15,7 @@ const GroupCards = ({group}) => {
     const NumofEvents = Array.isArray(eventsArr) ? eventsArr.filter(event => event.groupId === groupId).length : 0;
 
     const dispatch = useDispatch();
-    
+
     useEffect(() => {
         dispatch(getEvents())
     }, [dispatch])
@@ -28,7 +28,7 @@ const GroupCards = ({group}) => {
             <div className="group-right">
                 <h2>{group.name}</h2>
                 <h3>{group.city}, {group.state}</h3>
-                <p>{group.about}</p>
+                <p className='group-about'>{group.about}</p>
 
             </div>
             <div className="group-btm">

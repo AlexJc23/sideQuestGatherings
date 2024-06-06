@@ -7,7 +7,7 @@
         max-width: 900px;
         min-width: 550px;
         margin: 20px auto;
-    };
+    }
 
     .group-event-header {
         display: inline-block;
@@ -17,15 +17,42 @@
     .events-head {
         font-size:x-large;
         text-decoration: none;
+        font-weight: 100;
     }
-    .events-head:active {
+    .events-head:visited {
         font-size:x-large;
+        font-weight: 100;
         text-decoration: none;
         color: black;
-
+    }
+    .events-head:hover {
+        font-size:x-large;
+        font-weight: 100;
+        text-decoration: none;
+        color: #01558A;
+    }
+    .groups-head {
+        font-size:x-large;
+        color: #FABA55;
+        font-weight: 600;
+        margin: 0 15px;
+        cursor: default;
     }
 
+    .group-event-subheader {
+        color: #7b7b7b;
+    }
 
+    .cards {
+        width: 600px;
+    }
 
 
 /* group cards */
+.group-card {
+    display: flex;
+}
+.group-img {
+    width: 400px;
+    height: 300px;
+}
