@@ -1,0 +1,31 @@
+/* GroupEventMain */
+    .group-event-main {
+        align-items: flex-start;
+        border: 1px solid red;
+        display: flex;
+        flex-direction: column;
+        max-width: 900px;
+        min-width: 550px;
+        margin: 20px auto;
+    };
+
+    .group-event-header {
+        display: inline-block;
+        border: 1px solid green;
+    }
+
+    .events-head {
+        font-size:x-large;
+        text-decoration: none;
+    }
+    .events-head:active {
+        font-size:x-large;
+        text-decoration: none;
+        color: black;
+
+    }
+
+
+
+
+/* group cards */

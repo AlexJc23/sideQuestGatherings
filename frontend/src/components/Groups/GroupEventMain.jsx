@@ -1,8 +1,9 @@
 import {Link} from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux';
-import GroupCards from "./GroupCards";
+import GroupCards from './groupcards';
 import { useEffect } from 'react';
 import { getGroups } from "../../store/groups";
+import './Groups.css'
 
 const GroupMain = () => {
 
@@ -17,9 +18,9 @@ const GroupMain = () => {
     }, [dispatch]);
     return (
         <div className='group-event-main'>
-            <div className='group-event-main'>
-                <Link className='events-header' to={'/events'}>Events</Link>
-                <Link className='groups-header' to={'/groups'}>Groups</Link>
+            <div className='group-event-header'>
+                <Link className='events-head' to={'/events'}>Events</Link>
+                <Link className='groups-head' to={'/groups'}>Groups</Link>
             </div>
             <div className='group-event-subheader'>
                 <p>Groups in Side Quest Gatherings</p>

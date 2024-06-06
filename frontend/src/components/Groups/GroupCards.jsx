@@ -2,27 +2,28 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from 'react';
-// import { groupDetails } from '../../store/groups';
 import { getEvents } from '../../store/events';
-
 import { NavLink } from 'react-router-dom';
+import './Groups.css';
 
 const GroupCards = ({group}) => {
-    const dispatch = useDispatch();
     const events = useSelector(state => state.events.allEvents);
     const eventsArr = Object.values(events);
-    console.log('events   ', eventsArr);
+
     const groupId = group.id;
+
     const NumofEvents = Array.isArray(eventsArr) ? eventsArr.filter(event => event.groupId === groupId).length : 0;
-    console.log(NumofEvents)
+
+    const dispatch = useDispatch();
+    
     useEffect(() => {
         dispatch(getEvents())
     }, [dispatch])
 
     const seperateGroup = (
-        <NavLink key={group.id} to={`/groups/${group.id}`} className="group" >
+        <NavLink key={group.id} to={`/groups/${group.id}`} className="group-card" >
             <div className="group-left">
-                <img className="group-img" src={group.previewImage} alt="group" />
+                <img className="group-img" src={group.previewImage} alt="group picture" />
             </div>
             <div className="group-right">
                 <h2>{group.name}</h2>

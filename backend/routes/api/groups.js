@@ -15,7 +15,7 @@ const router = express.Router();
 
 
 
-router.get('/', requireAuth, async (req, res) => {
+router.get('/',  async (req, res) => {
 
     const allGroups = await Group.unscoped().findAll({include: [
         {model: GroupImage,
