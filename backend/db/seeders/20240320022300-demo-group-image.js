@@ -26,22 +26,22 @@ module.exports = {
    await GroupImage.bulkCreate([
     {
       groupId: 1,
-      imageUrl: 'testpic1.png',
+      imageUrl: 'https://images.pexels.com/photos/1670977/pexels-photo-1670977.jpeg',
       preview: true
     },
     {
       groupId: 1,
-      imageUrl: 'testpic2.jpeg',
+      imageUrl: 'https://images.pexels.com/photos/260024/pexels-photo-260024.jpeg',
       preview: false
     },
     {
       groupId: 3,
-      imageUrl: 'testpic3.png',
+      imageUrl: 'https://images.pexels.com/photos/4004426/pexels-photo-4004426.jpeg',
       preview: true
     },
     {
       groupId: 2,
-      imageUrl: 'testpic4.png',
+      imageUrl: 'https://images.pexels.com/photos/23092004/pexels-photo-23092004/free-photo-of-famous-billiard-club-811-in-moscow-atmosphere-inside.jpeg',
       preview: true
     }
    ], {validate: true})
