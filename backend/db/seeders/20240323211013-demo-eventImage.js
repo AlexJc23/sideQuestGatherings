@@ -28,22 +28,22 @@ module.exports = {
     await EventImage.bulkCreate([
       {
         eventId: 1,
-        imageUrl: 'testpic1.gif',
+        imageUrl: 'https://images.pexels.com/photos/1601774/pexels-photo-1601774.jpeg',
         preview: true,
       },
       {
         eventId: 1,
-        imageUrl: 'testpic2.png',
+        imageUrl: 'https://images.pexels.com/photos/4841182/pexels-photo-4841182.jpeg',
         preview: true,
       },
       {
         eventId: 3,
-        imageUrl: 'testpic3.gif',
+        imageUrl: 'https://images.pexels.com/photos/20551826/pexels-photo-20551826/free-photo-of-facade-of-a-postindustrial-building-with-a-venue.jpeg',
         preview: true,
       },
       {
         eventId: 2,
-        imageUrl: 'testpic4.gif',
+        imageUrl: 'https://images.pexels.com/photos/10543176/pexels-photo-10543176.jpeg',
         preview: false,
       },
     ], {validate: true})
