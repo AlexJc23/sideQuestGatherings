@@ -10,7 +10,7 @@ const GroupMain = () => {
     const groups = useSelector(state => state.groups.allGroups);
 
     const allGroups = groups ? Object.values(groups) : [];
-    console.log(allGroups);
+
 
     const dispatch = useDispatch();
     useEffect(() => {

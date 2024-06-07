@@ -59,7 +59,7 @@ const groupsReducer = (state = initialState, action) => {
         case ONE_GROUP: {
             return {
                 ...state,
-                currentGroup: action.payload  // Update current group details
+                currentGroup: action.payload  
             };
         }
         default:

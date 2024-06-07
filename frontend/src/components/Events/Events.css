@@ -1,0 +1,110 @@
+/* GroupEventMain */
+
+
+.groups-hd {
+    font-size:x-large;
+    text-decoration: none;
+    font-weight: 100;
+    cursor: pointer;
+    margin: 0 15px;
+}
+.groups-hd:visited {
+    font-size:x-large;
+    font-weight: 100;
+    text-decoration: none;
+    color: black;
+}
+.groups-hd:hover {
+    font-size:x-large;
+    font-weight: 100;
+    text-decoration: none;
+    color: #01558A;
+}
+.events-hd {
+    font-size:x-large;
+    color: #FABA55;
+    font-weight: 600;
+    cursor: default;
+}
+
+.group-event-subheader {
+    color: #7b7b7b;
+}
+
+.cards {
+    max-width: 850px;
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+}
+
+
+/* group cards */
+.event-card-top {
+    display: flex;
+    align-content: center;
+    gap: 20px;
+    /* border: 1px dotted blue; */
+    height: 100%;
+}
+
+.event-card {
+    text-decoration: none;
+    color: black;
+}
+
+.event-card h2 {
+    font-weight: 600;
+    font-size: 1.5rem;
+    word-wrap: break-word;
+}
+
+.event-card h3 {
+    color: #01558A;
+    /* margin: 0; */
+    font-weight: 100;
+}
+
+
+.event-card-btm {
+    margin: 10px 5px 0 0;
+}
+
+.event-about {
+    word-wrap:break-word;
+}
+
+.event-img {
+    width: 400px;
+    height: 200px;
+}
+
+.event-right {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+    min-width: 300px;
+    height: 100%;
+    gap: 10px;
+    /* padding: 5px 0 0 0; */
+
+}
+
+
+.spacer1 {
+    background-color: #01558a5f;
+    width: 850px;
+    min-width: 10px;
+    border-radius: 40px;
+    height: 2px;
+    margin: 20px 0 40px 0;
+}
+.spacers {
+    background-color: #01558a5f;
+    width: 850px;
+    min-width: 10px;
+    border-radius: 40px;
+    height: 2px;
+    margin: 25px 0 15px 0;
+}

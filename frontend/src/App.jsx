@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import GroupMain from './components/Groups/GroupMain';
+import EventMain from './components/Events/EventMain';
 import * as sessionActions from './store/session';
 
 import LandingPage from './components/Landing/LandingPage';
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
       {
         path: `/groups/:groupId`,
         element: <h1>Under Construction</h1>
+      },
+      {
+        path: '/events',
+        element: <EventMain />
+      },
+      {
+        path: '/events/:eventsId',
+        element: <h1>Welcome to the jungle!!!!</h1>
       },
       {
         path: '*',
