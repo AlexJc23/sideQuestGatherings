@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation';
-import GroupMain from './components/Groups/GroupEventMain';
+import GroupMain from './components/Groups/GroupMain';
 import * as sessionActions from './store/session';
 
 import LandingPage from './components/Landing/LandingPage';
