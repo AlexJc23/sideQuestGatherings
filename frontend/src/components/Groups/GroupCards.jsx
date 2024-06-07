@@ -21,6 +21,7 @@ const GroupCards = ({group}) => {
     }, [dispatch])
 
     const seperateGroup = (
+    <>
         <NavLink key={group.id} to={`/groups/${group.id}`} className="group-card" >
             <div className="group-left">
                 <img className="group-img" src={group.previewImage} alt="group picture" />
@@ -30,13 +31,16 @@ const GroupCards = ({group}) => {
                 <h3>{group.city}, {group.state}</h3>
                 <p className='group-about'>{group.about}</p>
 
-            </div>
             <div className="group-btm">
                     <span>{NumofEvents} Events</span>
-                    <span>{group.type}</span>
+                    <span>· {group.type}</span>
             </div>
-        </NavLink>)
+            </div>
+        </NavLink>
 
+        <div className='spacers'></div>
+    </>)
+    
     return (
         <div>
             {seperateGroup}

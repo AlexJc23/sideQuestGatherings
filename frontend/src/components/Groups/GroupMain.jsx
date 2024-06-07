@@ -25,11 +25,14 @@ const GroupMain = () => {
             <div className='group-event-subheader'>
                 <p>Groups in S.Q.G.</p>
             </div>
+            <div className='spacer1'></div>
             <div className='cards'>
             {allGroups.map(group => (
                 <GroupCards key={group.id} group={group} />
-            ))}
+                ))}
+
             </div>
+
         </div>
     )
 }
