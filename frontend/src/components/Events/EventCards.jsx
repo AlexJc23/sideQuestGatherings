@@ -18,7 +18,7 @@ const EventCards = ({ event }) => {
 
     return (
         <>
-            <NavLink key={event.id} to={`/groups/${event.id}`} className="event-card">
+            <NavLink key={event.id} to={`/events/${event.id}`} className="event-card">
                 <div className='event-card-top'>
                     <div className="event-left">
                         <img className="event-img" src={event.previewImage} alt="event picture" />

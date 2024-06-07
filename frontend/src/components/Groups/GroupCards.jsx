@@ -38,9 +38,9 @@ const GroupCards = ({group}) => {
             </div>
         </NavLink>
 
-        <div className='spacers'></div>
+        <div className='spacers empty'></div>
     </>)
-    
+
     return (
         <div>
             {seperateGroup}
