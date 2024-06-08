@@ -38,7 +38,7 @@ const GroupCards = ({group}) => {
             </div>
         </NavLink>
 
-        <div className='spacers empty'></div>
+        <div className='spacers'></div>
     </>)
 
     return (

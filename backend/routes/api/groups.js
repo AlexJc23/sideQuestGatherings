@@ -115,7 +115,7 @@ router.get('/current', requireAuth, async (req, res, next) => {
 });
 
 //get details of groups by id
-router.get('/:groupId', requireAuth, async (req, res) => {
+router.get('/:groupId',  async (req, res) => {
     const { groupId } = req.params;
     let groupById = await Group.findByPk(parseInt(groupId))
     if(!groupById) {
