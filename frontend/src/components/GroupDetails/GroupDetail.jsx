@@ -1,5 +1,5 @@
 import { groupDetails } from "../../store/groups";
-import { eventsArrSelector, getEvents } from "../../store/events";
+import { eventsArrSelector} from "../../store/events";
 import { useDispatch, useSelector } from 'react-redux';
 
 import { useEffect } from "react";
@@ -47,7 +47,7 @@ const GroupDetail = () => {
                     <span>{group.Organizer.firstName} {group.Organizer.lastName}</span>
                 </section>
                 <section className="details-about">
-                    <h2>What we're about</h2>
+                    <h2>What we&apos;re about</h2>
                     <p>{group.about}</p>
                 </section>
                 {futureEvents.length ? (<><h2>Upcoming Events ({futureEvents.length})</h2><section className="future-evnts">
