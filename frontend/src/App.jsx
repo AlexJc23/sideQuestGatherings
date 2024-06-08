@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider, Outlet } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import GroupMain from './components/Groups/GroupMain';
 import EventMain from './components/Events/EventMain';
+import GroupDetail from './components/GroupDetails/GroupDetail';
 import * as sessionActions from './store/session';
 
 import LandingPage from './components/Landing/LandingPage';
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
       },
       {
         path: `/groups/:groupId`,
-        element: <h1>Under Construction</h1>
+        element: <GroupDetail />
       },
       {
         path: '/events',

@@ -14,7 +14,7 @@ const EventCards = ({ event }) => {
         }
     }, [dispatch, event.id, eventDetail]);
 
-    console.log('Event Detail:', eventDetail);
+
 
     return (
         <>

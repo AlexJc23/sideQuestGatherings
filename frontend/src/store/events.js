@@ -1,5 +1,5 @@
 import { csrfFetch } from "./csrf";
-
+import {createSelector} from 'reselect'
 const ALL_EVENTS = 'events/ALL_EVENTS';
 const ONE_EVENT = 'events/ONE_EVENT';
 
@@ -38,6 +38,24 @@ export const eventDetails = (eventId) => async (dispatch) => {
     }
     return res;
 };
+// export const selectReports = (state) => state.reports;
+
+// export const reportsArraySelector = createSelector(
+//   selectReports,
+//   (reports) => {
+//     return Object.values(reports)
+//   }
+// );
+export const selectEvents = (state) => state.events.allEvents;
+
+export const eventsArrSelector = createSelector(
+    selectEvents,
+    (events) => {
+        return Object.values(events)
+    }
+);
+
+
 
 const initialState = { allEvents: {}, currentEvents: {} };
 

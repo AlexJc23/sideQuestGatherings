@@ -36,8 +36,9 @@ export const groupDetails = (groupId) => async (dispatch) => {
 
     if(res.ok) {
         const data = await res.json();
-        console.log('did it work?   ', data)
+
         dispatch(loadGroup(data))
+
     }
     return res;
 }
@@ -59,7 +60,7 @@ const groupsReducer = (state = initialState, action) => {
         case ONE_GROUP: {
             return {
                 ...state,
-                currentGroup: action.payload  
+                currentGroup: action.payload
             };
         }
         default:
