@@ -1,5 +1,5 @@
 import { csrfFetch } from "./csrf";
-import {createSelector} from 'reselect'
+
 const ALL_EVENTS = 'events/ALL_EVENTS';
 const ONE_EVENT = 'events/ONE_EVENT';
 
@@ -13,6 +13,7 @@ const loadEvent = (payload) => ({
     payload
 });
 
+// thunks
 export const getEvents = () => async (dispatch) => {
     const res = await csrfFetch('/api/events', {
         method: 'GET'
@@ -38,25 +39,25 @@ export const eventDetails = (eventId) => async (dispatch) => {
     }
     return res;
 };
-// export const selectReports = (state) => state.reports;
 
-// export const reportsArraySelector = createSelector(
-//   selectReports,
-//   (reports) => {
-//     return Object.values(reports)
-//   }
-// );
+// selectors.js
+import { createSelector } from 'reselect';
+
 export const selectEvents = (state) => state.events.allEvents;
 
 export const eventsArrSelector = createSelector(
     selectEvents,
-    (events) => {
-        return Object.values(events)
-    }
+    (events) => Object.values(events)
 );
 
+export const selectEventDetails = (state) => state.events.currentEvents;
 
+export const eventDetailSelector = (eventId) => createSelector(
+    selectEventDetails,
+    (events) => events[eventId]
+);
 
+// reducer.js
 const initialState = { allEvents: {}, currentEvents: {} };
 
 const eventsReducer = (state = initialState, action) => {

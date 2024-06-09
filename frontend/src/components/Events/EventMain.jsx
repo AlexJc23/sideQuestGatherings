@@ -11,7 +11,6 @@ const EventMain = () => {
     const events = useSelector(state => state.events.allEvents);
 
     const allEvents = events ? Object.values(events) : [];
-    console.log('events bro ', events);
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -32,6 +31,7 @@ const EventMain = () => {
             {allEvents.map(event => (
                 <EventCards key={event.id} event={event} />
                 ))}
+                
             </div>
         </div>
     )

@@ -6,6 +6,7 @@ import Navigation from './components/Navigation';
 import GroupMain from './components/Groups/GroupMain';
 import EventMain from './components/Events/EventMain';
 import GroupDetail from './components/GroupDetails/GroupDetail';
+import EventDetail from './components/EventDetails/EventDetail';
 import * as sessionActions from './store/session';
 
 import LandingPage from './components/Landing/LandingPage';
@@ -49,8 +50,8 @@ const router = createBrowserRouter([
         element: <EventMain />
       },
       {
-        path: '/events/:eventsId',
-        element: <h1>Welcome to the jungle!!!!</h1>
+        path: '/events/:eventId',
+        element: <EventDetail />
       },
       {
         path: '*',
