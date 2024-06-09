@@ -1,3 +1,4 @@
+import { createSelector } from "reselect";
 import { csrfFetch } from "./csrf";
 
 const ALL_GROUPS = 'groups/ALL_GROUPS';
@@ -36,12 +37,19 @@ export const groupDetails = (groupId) => async (dispatch) => {
 
     if(res.ok) {
         const data = await res.json();
-
         dispatch(loadGroup(data))
 
     }
     return res;
 }
+
+export const selectorGroups = (state) => state.groups.allGroups;
+
+export const groupDetailSelector = (groupId) => createSelector(
+    selectorGroups,
+    (group) => group[groupId]
+);
+
 
 const initialState = { allGroups: {}, currentGroup: {} };  // initial state
 

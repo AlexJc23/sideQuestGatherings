@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
-import EventCards from "../Events/EventCards";
+import EventCard from "../EventDetails/EventDetailCards";
 import './GroupDetail.css'
 import GroupDetailsCard from "./GroupDetailCard";
 
@@ -32,39 +32,42 @@ const GroupDetail = () => {
         dispatch(groupDetails(groupId));
     }, [dispatch, groupId]);
 
+    if(!group) return <h1>Loading...</h1>;
 
     if (!group.Organizer) {
         return null;
     }
 
+
+
     return (
         <>
-            <div className="details">
+            <div>
                 <GroupDetailsCard group={group} />
-            <div className='details-btm'>
-                <section className="Organizer">
-                    <h2>Organizer</h2>
-                    <span>{group.Organizer.firstName} {group.Organizer.lastName}</span>
-                </section>
-                <section className="details-about">
-                    <h2>What we&apos;re about</h2>
-                    <p>{group.about}</p>
-                </section>
-                {futureEvents.length ? (<><h2>Upcoming Events ({futureEvents.length})</h2><section className="future-evnts">
-                {futureEvents.map(event => (
-
-
-                    <EventCards key={event.id} event={event} />
-
-                ))}
-                </section></>) : (<div></div>)}
-                {pastEvents.length ? (<><h2>Past Events ({pastEvents.length})</h2> <section className="past-evnts">
-                {pastEvents.map(event => (
-                <EventCards key={event.id} event={event} />
-                ))}
-                </section> </>) : (<div></div>)}
+                <div className='bottom-of-all'>
+                    <div className='details-btm'>
+                        <section className="Organizer">
+                            <h2>Organizer</h2>
+                            <p>{group.Organizer.firstName} {group.Organizer.lastName}</p>
+                        </section>
+                        <section className="details-about">
+                            <h2>What we&apos;re about</h2>
+                            <p>{group.about}</p>
+                        </section>
+                        {futureEvents.length ? (<><h2 className="past-future">Upcoming Events ({futureEvents.length})</h2><section className="evnts-list">
+                        {futureEvents.map(event => (
+                            <EventCard  key={event.id} event={event} />
+                        ))}
+                        </section></>) : (<div></div>)}
+                        {pastEvents.length ? (<><h2 className="past-future">Past Events ({pastEvents.length})</h2> <section className="evnts-list">
+                        {pastEvents.map(event => (
+                        <EventCard key={event.id} event={event} />
+                        ))}
+                        </section> </>) : (<div></div>)}
+                    </div>
+                </div >
             </div>
-            </div>
+
         </>
     );
 

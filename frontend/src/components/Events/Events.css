@@ -52,6 +52,8 @@
 .event-card {
     text-decoration: none;
     color: black;
+    padding-bottom: 35px;
+    border-bottom: #01558a5f solid 2px;
 }
 
 .event-card h2 {
