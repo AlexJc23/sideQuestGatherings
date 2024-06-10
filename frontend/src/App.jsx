@@ -54,6 +54,10 @@ const router = createBrowserRouter([
         element: <EventDetail />
       },
       {
+        path: '/groups/new',
+        element: <h1>Hello World!</h1>
+      },
+      {
         path: '*',
         element: <h1>404 go back bucko</h1>
       }
