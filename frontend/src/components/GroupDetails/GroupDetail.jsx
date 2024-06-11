@@ -58,7 +58,7 @@ const GroupDetail = () => {
                         {futureEvents.map(event => (
                             <EventCard  key={event.id} event={event} />
                         ))}
-                        </section></>) : (<div></div>)}
+                        </section></>) : (<h2 className="past-future">No Upcoming Events</h2>)}
                         {pastEvents.length ? (<><h2 className="past-future">Past Events ({pastEvents.length})</h2> <section className="evnts-list">
                         {pastEvents.map(event => (
                         <EventCard key={event.id} event={event} />

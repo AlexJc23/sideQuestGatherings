@@ -24,7 +24,7 @@ const GroupCards = ({group}) => {
     <>
         <NavLink key={group.id} to={`/groups/${group.id}`} className="group-card" >
             <div className="group-left">
-                <img className="group-img" src={group.previewImage} alt="group picture" />
+                {!group.previewImage ? <img className="group-img" src='./BlueMonogramLogo.svg' alt="group picture" />:<img className="group-img" src={group.previewImage} alt="group picture" />}
             </div>
             <div className="group-right">
                 <h2>{group.name}</h2>

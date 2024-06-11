@@ -50,24 +50,41 @@ export const groupDetails = (groupId) => async (dispatch) => {
 }
 
 export const createGroup = (payload) => async (dispatch) => {
-    let res;
-    res = await csrfFetch('/api/groups', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-    });
-
-    if(res.ok) {
-        const data = await res.json()
-        console.log(data)
+    let response;
+    try {
+        response = await csrfFetch(`/api/groups`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload),
+        });
+    } catch (error) {
+        return await error.json();
+    }
+    const data = await response.json();
+    console.log('payload   ',payload)
+    console.log('data   ',data)
+    let image = {
+            groupId: data.id,
+            url: payload.url,
+            preview: true
+    }
+    try {
+        response = await csrfFetch(`/api/groups/${data.id}/images`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(image),
+        });
+    } catch (error) {
+        return await error.json();
     }
 
-    // const imagery = {
-
-    // }
-    dispatch(addGroup(data))
+    // console.log(data)
+    dispatch(addGroup(data));
+    return data;
 }
 
 

@@ -24,19 +24,21 @@ const GroupDetailsCard = ({ group }) => {
         return null;
     }
 
-    if (!group.GroupImages || group.GroupImages.length === 0) {
 
-        return <div className="detail-img">No Image available</div>;
+
+    if ( group.GroupImages.length === 0) {
+
+        return <img className="detail-img" src='../BlueMonogramLogo.svg' alt="group picture" />;
     }
 
     const groupCard = (
         <div className="details-card">
             <div className="detail-left">
             <button className="back-btn" onClick={handleGoBack}><IoChevronBack /> back</button>
-                {group.GroupImages[0]?.url ? (
+                {group.GroupImages[0].url ? (
                     <img className="detail-img" src={group.GroupImages[0].url} alt="group picture" />
                 ) : (
-                    <div>No image available</div>
+                    <img className="detail-img" src='./BlueMonogramLogo.svg' alt="group picture" />
                 )}
             </div>
             <div className="detail-right">

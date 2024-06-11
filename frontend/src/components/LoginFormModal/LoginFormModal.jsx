@@ -29,8 +29,6 @@ function LoginFormModal() {
     return dispatch(sessionActions.login({ credential, password })).then(closeModal).catch(
       async (res) => {
         const data = await res.json();
-        console.log(data)
-        console.log('working?    ',newErr)
         if (data.message) setNewErr(data);
       }
     );
