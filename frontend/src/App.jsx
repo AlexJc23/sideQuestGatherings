@@ -7,6 +7,7 @@ import GroupMain from './components/Groups/GroupMain';
 import EventMain from './components/Events/EventMain';
 import GroupDetail from './components/GroupDetails/GroupDetail';
 import EventDetail from './components/EventDetails/EventDetail';
+import CreateGroup from './components/CreateGroup/CreateGroup';
 import * as sessionActions from './store/session';
 
 import LandingPage from './components/Landing/LandingPage';
@@ -55,7 +56,7 @@ const router = createBrowserRouter([
       },
       {
         path: '/groups/new',
-        element: <h1>Hello World!</h1>
+        element: <CreateGroup />
       },
       {
         path: '*',
