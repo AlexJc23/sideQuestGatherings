@@ -40,7 +40,7 @@ const LandingPage = () => {
                 </div>
                 <div className='sect3-sqr'>
                     <img src='/creategroup.png'/>
-                    <NavLink to="/messages" className='sect3-navlink'>
+                    <NavLink to="/groups/new" className='sect3-navlink'>
                         Start a new group
                     </NavLink>
                     <p>

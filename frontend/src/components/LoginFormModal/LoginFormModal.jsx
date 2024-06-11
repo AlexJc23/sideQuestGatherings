@@ -12,7 +12,7 @@ function LoginFormModal() {
   const [credential, setCredential] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState({});
-
+  const [newErr, setNewErr] = useState({});
   const { closeModal } = useModal();
 
   const handleSubmit = (e) => {
@@ -25,14 +25,15 @@ function LoginFormModal() {
 
     setErrors(errs)
 
-    return dispatch(sessionActions.login({ credential, password }))
-      .then(closeModal)
-      .catch(async (res) => {
+    setNewErr({});
+    return dispatch(sessionActions.login({ credential, password })).then(closeModal).catch(
+      async (res) => {
         const data = await res.json();
-        if (data && data.errors) {
-          setErrors(data.errors);
-        }
-      });
+        console.log(data)
+        console.log('working?    ',newErr)
+        if (data.message) setNewErr(data);
+      }
+    );
   };
 
 
@@ -41,6 +42,7 @@ function LoginFormModal() {
     <div className='login-form'>
       <img className='login-img' src='/BlueLogo.svg'/>
       <h1 className='header-login'>Log In</h1>
+      {newErr && <p>{newErr.message}</p>}
       <form onSubmit={handleSubmit}>
         <section className='form-input'>
           <label className='s'>
