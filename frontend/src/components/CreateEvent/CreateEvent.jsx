@@ -2,6 +2,7 @@ import { useParams } from "react-router-dom";
 import { groupDetails } from "../../store/groups";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect } from "react";
+import { createEvent } from "../../store/events";
 
 const CreateEvent = () => {
     const {groupId} = useParams();

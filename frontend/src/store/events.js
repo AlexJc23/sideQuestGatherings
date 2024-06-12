@@ -126,6 +126,16 @@ const eventsReducer = (state = initialState, action) => {
                 }
             };
         }
+        case ADD_EVENT: {
+            const newEvent = action.payload;
+            return {
+                ...state,
+                allEvents: {
+                    ...state.allEvents,
+                    [newEvent.id]: newEvent
+                }
+            };
+        }
         default:
             return state;
     }
