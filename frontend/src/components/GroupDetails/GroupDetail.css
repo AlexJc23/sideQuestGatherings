@@ -54,9 +54,8 @@
 
 .join-group-btn{
     display: flex;
-    border: #01558A solid 1px;
     margin-top: auto;
-
+    justify-content: space-between;
 }
 .back-btn{
     background: none;

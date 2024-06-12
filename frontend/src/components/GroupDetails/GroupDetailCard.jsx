@@ -60,10 +60,10 @@ const GroupDetailsCard = ({ group }) => {
                     <span>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</span>
                 </div>
                 <div className='join-group-btn' >
-                <NavLink to={`/events/new`} style={{display: `${nonOwner}`}}><button className="create-event-btn" >Join Group</button></NavLink>
-                <NavLink to={`/events/new`} style={{visibility: `${owner}`}}><button className="create-event-btn" >Create Event</button></NavLink>
-                <NavLink to={`/events/new`} style={{visibility: `${owner}`}}><button className="create-event-btn" >Update</button></NavLink>
-                <NavLink to={`/events/new`} style={{visibility: `${owner}`}}><button className="create-event-btn" >Delete</button></NavLink>
+                <NavLink to={``} style={{display: `${nonOwner}`}}><button className="create-event-btn" >Join Group</button></NavLink>
+                <NavLink to={`/groups/${group.id}/events/new`} style={{display: `${owner}`}}><button className="create-event-btn" >Create Event</button></NavLink>
+                <NavLink to={`/groups/${group.id}/edit`} style={{display: `${owner}`}}><button className="create-event-btn" >Update</button></NavLink>
+                <NavLink to={`/events/new`} style={{display: `${owner}`}}><button className="create-event-btn" >Delete</button></NavLink>
                 </div>
             </div>
         </div>

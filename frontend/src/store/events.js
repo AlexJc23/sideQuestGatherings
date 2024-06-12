@@ -2,6 +2,7 @@ import { csrfFetch } from "./csrf";
 
 const ALL_EVENTS = 'events/ALL_EVENTS';
 const ONE_EVENT = 'events/ONE_EVENT';
+const ADD_EVENT = 'events/ADD_EVENT';
 
 const loadEvents = (payload) => ({
     type: ALL_EVENTS,
@@ -12,6 +13,12 @@ const loadEvent = (payload) => ({
     type: ONE_EVENT,
     payload
 });
+
+const addEvent = (payload) => ({
+    type: ADD_EVENT,
+    payload
+});
+
 
 // thunks
 export const getEvents = () => async (dispatch) => {
@@ -39,6 +46,43 @@ export const eventDetails = (eventId) => async (dispatch) => {
     }
     return res;
 };
+
+export const createEvent = (payload, groupId) => async (dispatch) => {
+    let res;
+    try {
+        res = await csrfFetch(`api/groups/${groupId}/events`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload),
+        });
+    } catch (error) {
+        return await error.json()
+    }
+
+    const data = await res.json();
+
+    let image = {
+        eventId: data.id,
+            imageUrl: payload.url,
+            preview: true
+    }
+    try {
+        res = await csrfFetch(`api/${data.id}/images`,{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(image),
+        });
+    } catch (error) {
+        return await error.json()
+    }
+    dispatch(addEvent(data));
+    return data;
+}
+
 
 // selectors.js
 import { createSelector } from 'reselect';

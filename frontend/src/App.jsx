@@ -8,6 +8,7 @@ import EventMain from './components/Events/EventMain';
 import GroupDetail from './components/GroupDetails/GroupDetail';
 import EventDetail from './components/EventDetails/EventDetail';
 import CreateGroup from './components/CreateGroup/CreateGroup';
+import CreateEvent from './components/CreateEvent/CreateEvent';
 import * as sessionActions from './store/session';
 
 import LandingPage from './components/Landing/LandingPage';
@@ -57,6 +58,10 @@ const router = createBrowserRouter([
       {
         path: '/groups/new',
         element: <CreateGroup />
+      },
+      {
+        path: '/groups/:groupId/events/new',
+        element: <CreateEvent />
       },
       {
         path: '*',
