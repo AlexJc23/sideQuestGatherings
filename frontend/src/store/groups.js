@@ -125,7 +125,7 @@ const groupsReducer = (state = initialState, action) => {
                 ...state,
                 allGroups: {
                     ...state.allGroups,
-                    [newGroup.id]: newGroup  // Add new group to allGroups
+                    [newGroup.id]: newGroup 
                 }
             };
         }
