@@ -8,6 +8,7 @@ const GroupDetailsCard = ({ group }) => {
 
     const {user} = useSelector(state => state.session);
     console.log(user)
+    console.log(group)
 
     const events = useSelector(state => state.events.allEvents);
     const eventArr = Object.values(events);
@@ -35,6 +36,9 @@ const GroupDetailsCard = ({ group }) => {
         return <img className="detail-img" src='../BlueMonogramLogo.svg' alt="group picture" />;
     }
 
+    const owner = group.organizerId == user.id ? '' : 'none';
+    const nonOwner = group.organizerId != user.id ? '' : 'none';
+
     const groupCard = (
         <div className="details-card">
             <div className="detail-left">
@@ -56,10 +60,10 @@ const GroupDetailsCard = ({ group }) => {
                     <span>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</span>
                 </div>
                 <div className='join-group-btn' >
-                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Join Group</button></NavLink>
-                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Create Event</button></NavLink>
-                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Update</button></NavLink>
-                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Delete</button></NavLink>
+                <NavLink to={`/events/new`} style={{display: `${nonOwner}`}}><button className="create-event-btn" >Join Group</button></NavLink>
+                <NavLink to={`/events/new`} style={{visibility: `${owner}`}}><button className="create-event-btn" >Create Event</button></NavLink>
+                <NavLink to={`/events/new`} style={{visibility: `${owner}`}}><button className="create-event-btn" >Update</button></NavLink>
+                <NavLink to={`/events/new`} style={{visibility: `${owner}`}}><button className="create-event-btn" >Delete</button></NavLink>
                 </div>
             </div>
         </div>
