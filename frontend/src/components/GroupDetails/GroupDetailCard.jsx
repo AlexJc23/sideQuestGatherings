@@ -2,9 +2,13 @@ import { getEvents } from "../../store/events";
 import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from "react";
 import { IoChevronBack } from "react-icons/io5";
-import { useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 
 const GroupDetailsCard = ({ group }) => {
+
+    const {user} = useSelector(state => state.session);
+    console.log(user)
+
     const events = useSelector(state => state.events.allEvents);
     const eventArr = Object.values(events);
     const dispatch = useDispatch();
@@ -51,7 +55,12 @@ const GroupDetailsCard = ({ group }) => {
                 <div className="group-organizer">
                     <span>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</span>
                 </div>
-                <button className="join-group-btn">Join Group</button>
+                <div className='join-group-btn' >
+                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Join Group</button></NavLink>
+                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Create Event</button></NavLink>
+                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Update</button></NavLink>
+                <NavLink to={`/events/new`} style={{visibility: ''}}><button className="create-event-btn" >Delete</button></NavLink>
+                </div>
             </div>
         </div>
     );
