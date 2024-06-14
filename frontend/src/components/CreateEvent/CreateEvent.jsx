@@ -44,8 +44,15 @@ const CreateEvent = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setErrors({});
 
+        const errs = {};
+
+        if(!name || name === '') errs['name'] = 'Name is required';
+        if(type === '') errs['type'] = 'Event Type is required';
+        if(isPrivate === '') errs['private'] = 'Visibilty is required';
+        if(price === '' || typeof price !== 'number') errs['price'] = 'Price is required'
+
+        //finish validators
 
         const payload = {
             groupId: groupId,
