@@ -44,7 +44,7 @@ const GroupDetailsCard = ({ group }) => {
             <div className="detail-left">
             <button className="back-btn" onClick={handleGoBack}><IoChevronBack /> back</button>
                 {group.GroupImages[0].url ? (
-                    <img className="detail-img" src={group.GroupImages[0].url} alt="group picture" />
+                    <img className="detail-img" src={group.GroupImages.at(-1).url} alt="group picture" />
                 ) : (
                     <img className="detail-img" src='./BlueMonogramLogo.svg' alt="group picture" />
                 )}

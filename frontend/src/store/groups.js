@@ -63,8 +63,7 @@ export const createGroup = (payload) => async (dispatch) => {
         return await error.json();
     }
     const data = await response.json();
-    console.log('payload   ',payload)
-    console.log('data   ',data)
+
     let image = {
             groupId: data.id,
             url: payload.url,
@@ -125,7 +124,7 @@ const groupsReducer = (state = initialState, action) => {
                 ...state,
                 allGroups: {
                     ...state.allGroups,
-                    [newGroup.id]: newGroup 
+                    [newGroup.id]: newGroup
                 }
             };
         }
