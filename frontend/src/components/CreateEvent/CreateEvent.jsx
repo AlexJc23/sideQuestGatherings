@@ -17,7 +17,7 @@ const CreateEvent = () => {
     useEffect(() => {
         dispatch(groupDetails(groupId))
     }, [dispatch, groupId])
-
+    console.log(group)
     return (
         <form id="event-form">
             <section >
