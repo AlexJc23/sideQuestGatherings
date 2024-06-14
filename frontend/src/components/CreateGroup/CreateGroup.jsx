@@ -64,7 +64,7 @@ const CreateGroup = () => {
         } else {
             navigate(`/groups/${response.id}`);
         }
-
+        
     }
 
     return (

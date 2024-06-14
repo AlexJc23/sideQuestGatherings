@@ -47,29 +47,30 @@ export const eventDetails = (eventId) => async (dispatch) => {
     return res;
 };
 
-export const createEvent = (payload, groupId) => async (dispatch) => {
+export const createEvent = (payload,groupId) => async (dispatch) => {
     let res;
     try {
-        res = await csrfFetch(`api/groups/${groupId}/events`, {
+        res = await csrfFetch(`/api/groups/${groupId}/events`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(payload),
         });
+
     } catch (error) {
-        return await error.json()
+        return await error.json();
     }
 
     const data = await res.json();
-
+    console.log('datatattata   ', data)
     let image = {
         eventId: data.id,
             imageUrl: payload.url,
             preview: true
     }
     try {
-        res = await csrfFetch(`api/${data.id}/images`,{
+        res = await csrfFetch(`/api/events/${data.id}/images`,{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
