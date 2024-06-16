@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useEffect } from "react";
 import { IoChevronBack } from "react-icons/io5";
 import { NavLink, useNavigate } from 'react-router-dom';
+import DeleteGroup from "../DeleteGroupModalButton/DeleteGroup";
+import OpenModalButton from "../OpenModalButton/OpenModalButton";
 
 const GroupDetailsCard = ({ group }) => {
 
@@ -59,10 +61,12 @@ const GroupDetailsCard = ({ group }) => {
                     <span>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</span>
                 </div>
                 <div className='join-group-btn' >
-                <NavLink to={``} style={{display: `${nonOwner}`}}><button className="create-event-btn" >Join Group</button></NavLink>
-                <NavLink to={`/groups/${group.id}/events/new`} style={{display: `${owner}`}}><button className="create-event-btn" >Create Event</button></NavLink>
-                <NavLink to={`/groups/${group.id}/edit`} style={{display: `${owner}`}}><button className="create-event-btn" >Update</button></NavLink>
-                <NavLink to={`/events/new`} style={{display: `${owner}`}}><button className="create-event-btn" >Delete</button></NavLink>
+                    <NavLink to={``} style={{display: `${nonOwner}`}}><button className="create-event-btn" >Join Group</button></NavLink>
+                    <NavLink to={`/groups/${group.id}/events/new`} style={{display: `${owner}`}}><button className="create-event-btn" >Create Event</button></NavLink>
+                    <NavLink to={`/groups/${group.id}/edit`} style={{display: `${owner}`}}><button className="create-event-btn" >Update</button></NavLink>
+                    <div style={{display: `${owner}`}}>
+                        <OpenModalButton buttonText={'Delete'} modalComponent={<DeleteGroup groupId={group.id} navigate={navigate}/>} />
+                    </div>
                 </div>
             </div>
         </div>

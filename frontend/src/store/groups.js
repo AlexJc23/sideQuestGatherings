@@ -4,7 +4,7 @@ import { csrfFetch } from "./csrf";
 const ALL_GROUPS = 'groups/ALL_GROUPS';
 const ONE_GROUP = 'groups/ONE_GROUP';
 const ADD_GROUP = 'groups/ADD-GROUP';
-const EDIT_GROUP = 'groups/EDIT_GROUP';
+const DELETE_GROUP = 'groups/DELETE_GROUP';
 
 const loadGroups = (payload) => ({
     type: ALL_GROUPS,
@@ -20,10 +20,12 @@ const addGroup = (payload) => ({
     payload
 });
 
-const editGroup = (payload) => ({
-    type: EDIT_GROUP,
-    payload
-})
+const deleteGroup = (groupId) => ({
+    type: DELETE_GROUP,
+    groupId
+});
+
+
 
 
 //get all groups from data
@@ -125,6 +127,12 @@ export const changeGroupDetails = (payload, groupId) => async (dispatch) => {
     }
     dispatch(addGroup(data));
     return data;
+};
+
+export const removeGroup = (groupId) => async (dispatch) => {
+    const res = await csrfFetch(`/api/groups/${groupId}`, {
+        method: 'DELETE'
+    })
 }
 
 // custom selectors
@@ -167,6 +175,11 @@ const groupsReducer = (state = initialState, action) => {
                     [newGroup.id]: newGroup
                 }
             };
+        }
+        case DELETE_GROUP: {
+            const newState = {...state};
+            delete newState.allGroups[action.groupId];
+            return newState
         }
         default:
             return state;
