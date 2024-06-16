@@ -7,8 +7,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 const GroupDetailsCard = ({ group }) => {
 
     const {user} = useSelector(state => state.session);
-    console.log(user)
-    console.log(group)
+
 
     const events = useSelector(state => state.events.allEvents);
     const eventArr = Object.values(events);

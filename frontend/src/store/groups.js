@@ -4,6 +4,7 @@ import { csrfFetch } from "./csrf";
 const ALL_GROUPS = 'groups/ALL_GROUPS';
 const ONE_GROUP = 'groups/ONE_GROUP';
 const ADD_GROUP = 'groups/ADD-GROUP';
+const EDIT_GROUP = 'groups/EDIT_GROUP';
 
 const loadGroups = (payload) => ({
     type: ALL_GROUPS,
@@ -18,6 +19,11 @@ const addGroup = (payload) => ({
     type: ADD_GROUP,
     payload
 });
+
+const editGroup = (payload) => ({
+    type: EDIT_GROUP,
+    payload
+})
 
 
 //get all groups from data
@@ -86,6 +92,40 @@ export const createGroup = (payload) => async (dispatch) => {
     return data;
 }
 
+export const changeGroupDetails = (payload, groupId) => async (dispatch) => {
+    let response;
+    try {
+        response = await csrfFetch(`/api/groups/${groupId}`, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload),
+        });
+    } catch (error) {
+        return await error.json();
+    }
+    const data = await response.json();
+
+    let image = {
+            groupId: data.id,
+            url: payload.url,
+            preview: true
+    }
+    try {
+        response = await csrfFetch(`/api/groups/${data.id}/images`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(image),
+        });
+    } catch (error) {
+        return await error.json();
+    }
+    dispatch(addGroup(data));
+    return data;
+}
 
 // custom selectors
 export const selectorGroups = (state) => state.groups.allGroups;
