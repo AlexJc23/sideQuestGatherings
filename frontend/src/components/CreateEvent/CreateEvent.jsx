@@ -3,7 +3,7 @@ import { groupDetails } from "../../store/groups";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { createEvent } from "../../store/events";
-import { FaDollarSign } from "react-icons/fa6";
+
 import './CreateEvent.css'
 
 const CreateEvent = () => {

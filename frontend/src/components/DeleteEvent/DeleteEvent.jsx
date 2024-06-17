@@ -1,6 +1,5 @@
 
 import { useModal } from "../../context/Modal";
-import { removeGroup } from "../../store/groups";
 import { useDispatch } from "react-redux";
 import { removeEvent } from "../../store/events";
 
