@@ -1,0 +1,13 @@
+#event-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    max-width: 1000px;
+    min-width: 700px;
+    margin: 30px auto;
+
+}
+
+#event-form label {
+    margin: 10px 0;
+}
