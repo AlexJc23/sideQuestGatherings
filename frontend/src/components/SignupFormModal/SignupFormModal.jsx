@@ -13,7 +13,6 @@ function SignupFormModal() {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState({});
-  const [userErrors, setUserErrors] = useState({});
 
   const { closeModal } = useModal();
 
@@ -45,8 +44,7 @@ function SignupFormModal() {
   };
 
 
-  console.log('useerEEEERRR', userErrors);
-  console.log('EEEERRR', errors);
+
   return (
     <div className='signup-form' >
        <img className='signup-img' src='/BlueLogo.svg'/>
@@ -84,7 +82,6 @@ function SignupFormModal() {
               required
             />
           </label>
-          <p className='errors'>{userErrors.firstName}</p>
           {errors.firstName && <p className='errors'>{errors.firstName}</p>}
         </section>
         <section className='form-input'>
@@ -125,7 +122,7 @@ function SignupFormModal() {
         {errors.confirmPassword && (
           <p className='errors'>{errors.confirmPassword}</p>
         )}
-        <button disabled={Object.keys(userErrors).length} type="submit">Sign Up</button>
+        <button disabled={Object.keys(errors).length} type="submit">Sign Up</button>
       </form>
     </div >
   );
