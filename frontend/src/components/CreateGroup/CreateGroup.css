@@ -1,0 +1,52 @@
+#group-form {
+    display: flex;
+    flex-direction: column;
+    max-width: 1000px;
+    min-width: 700px;
+    margin: 50px auto;
+
+}
+
+#group-form > section:nth-child(1) > span {
+    color: #014067;
+}
+#group-form h3 {
+    font-size:x-large;
+}
+#group-form label {
+    margin: 10px 0;
+}
+
+#group-form section {
+    border-bottom: 2px solid #01406727;
+}
+
+.divider {
+    margin: 20px 0;
+}
+
+.form-section {
+    border-bottom: 2px solid black;
+    margin-bottom: 10px;
+    padding-bottom: 30px;
+}
+
+#location {
+    display: flex;
+    gap: 20px;
+}
+
+input, textarea, select {
+    background-color: #fabb555e;
+}
+
+textarea {
+    width: 350px;
+    height: 200px;
+}
+
+.submit-btn {
+    margin: 20px 0;
+}
+
+

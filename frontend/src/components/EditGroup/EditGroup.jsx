@@ -14,8 +14,7 @@ const EditGroup = () => {
         dispatch(groupDetails(groupId))
     }, [dispatch, groupId])
 
-    // console.log(group)
-    const { user } = useSelector(state => state.session)
+
 
     const navigate = useNavigate();
 
@@ -29,7 +28,6 @@ const EditGroup = () => {
     const [url, setUrl] = useState(group.GroupImages ? group.GroupImages.at(-1).url : '')
 
     const [errors, setErrors] = useState({});
-    const [userErrors, setUserErrors] = useState({});
 
     const handleName = e => setName(e.target.value);
     const handleCity = e => setCity(e.target.value);
@@ -55,7 +53,6 @@ const EditGroup = () => {
         const fileArr = ['.png', '.jpg', '.jpeg']
         if(!fileArr.includes(url.slice(-4))) userErrs['url'] = 'Image URL must end in .png, .jpg, or .jpeg'
 
-        setUserErrors(userErrs);
 
         const groupPayload = {
             name,
@@ -81,8 +78,8 @@ const EditGroup = () => {
     return (
         <form id="group-form" onSubmit={handleGroupSubmit}>
             <section>
-                <p>UPDATE YOUR GROUP'S INFORMATION</p>
-                <h3>We&apos;ll walk you through a few steps to update your group's information</h3>
+                <p>UPDATE YOUR GROUP&apos;S INFORMATION</p>
+                <h3>We&apos;ll walk you through a few steps to update your group&apos;s information</h3>
             </section>
             <section className="form-section">
                 <h3>First, set your group&apos;s location.</h3>

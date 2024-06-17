@@ -134,8 +134,9 @@ export const removeGroup = (groupId) => async (dispatch) => {
         method: 'DELETE'
     });
 
-    dispatch(removeGroup(groupId));
-
+    const data = await res.json()
+    dispatch(deleteGroup(groupId));
+    return data
 }
 
 // custom selectors

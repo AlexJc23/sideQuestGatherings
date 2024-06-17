@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { createGroup } from '../../store/groups';
+import './CreateGroup.css'
 
 const CreateGroup = () => {
     const { user } = useSelector(state => state.session)
@@ -64,23 +65,23 @@ const CreateGroup = () => {
         } else {
             navigate(`/groups/${response.id}`);
         }
-        
+
     }
 
     return (
         <form id="group-form" onSubmit={handleGroupSubmit}>
             <section>
-                <p>BECOME AN ORGANIZER</p>
+                <span>BECOME AN ORGANIZER</span>
                 <h3>We&apos;ll walk you through a few steps to build your local community</h3>
             </section>
             <section className="form-section">
                 <h3>First, set your group&apos;s location.</h3>
                 <p>Side Quest Gatherings groups meet locally, in person and online. We&apos;ll connect you with people in your area, and more can join you online.</p>
-                <div>
+                <div id='location'>
                     <input type="text" value={city} onChange={handleCity} placeholder="City" />
                     <input type="text" value={state} onChange={handleState} placeholder="State" />
                 </div>
-                {errors.state && <p className="errors">{errors.state}</p>}{errors.city && <p className="errors">{errors.city}</p>}
+                {errors.state && <p className="errors">{'*' + errors.state}</p>}{errors.city && <p className="errors">{ '*' +errors.city}</p>}
             </section>
             <section className="form-section">
                 <h3>What will your group&apos;s name be?</h3>
@@ -88,7 +89,7 @@ const CreateGroup = () => {
                 <div>
                     <input type="text" value={name} onChange={handleName} placeholder="What is the name of your group?" />
                 </div>
-                {errors.name && <p className="errors">{errors.name}</p>}
+                {errors.name && <p className="errors">{'*' + errors.name}</p>}
             </section>
             <section className="form-section">
                 <h3>Now describe what your group will be about</h3>
@@ -101,11 +102,11 @@ const CreateGroup = () => {
                 <div>
                     <textarea type="text" value={about} onChange={handleAbout} placeholder="Please write at least 30 characters" />
                 </div>
-                {errors.about && <p className='errors'>{errors.about}</p>}
+                {errors.about && <p className='errors'>{'*' + errors.about}</p>}
             </section>
             <section className="form-section">
                 <h3>Final steps...</h3>
-                <div>
+                <div className='divider'>
                     <label>
                         Is this an in person or online group?
                     </label>
@@ -114,9 +115,9 @@ const CreateGroup = () => {
                         <option >Online</option>
                         <option >In person</option>
                     </select>
-                    {errors.type && <p className="errors">{errors.type}</p>}
+                    {errors.type && <p className="errors">{'*' +errors.type}</p>}
                 </div>
-                <div>
+                <div className='divider'>
                     <label>
                         Is this group private or public?
                     </label>
@@ -125,18 +126,18 @@ const CreateGroup = () => {
                         <option >Private</option>
                         <option >Public</option>
                     </select>
-                    {errors.private && <p className='errors'>Visibility Type is required </p>}
+                    {errors.private && <p className='errors'>*Visibility Type is required </p>}
                 </div>
-                <div>
+                <div className='divider'>
                     <label>
                         Please add an image url for your group below.
                     </label>
                     <input type='text' value={url} onChange={handleUrl} placeholder="Image Url"></input>
                 </div>
-                {userErrors.url && <p className='errors'>{userErrors.url}</p>}
+                {userErrors.url && <p className='errors'>{'*' + userErrors.url}</p>}
             </section>
 
-            <button type='submit'>Create Group</button>
+            <button className='submit-btn' type='submit'>Create Group</button>
         </form>
     )
 }
