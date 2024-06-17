@@ -37,8 +37,8 @@ const GroupDetailsCard = ({ group }) => {
         return <img className="detail-img" src='../BlueMonogramLogo.svg' alt="group picture" />;
     }
 
-    const owner = group.organizerId == user.id ? '' : 'none';
-    const nonOwner = group.organizerId != user.id ? '' : 'none';
+    const owner = user && group.organizerId == user.id ? '' : 'none';
+    const nonOwner = !user || group.organizerId != user.id ? '' : 'none';
 
     const groupCard = (
         <div className="details-card">
@@ -52,7 +52,7 @@ const GroupDetailsCard = ({ group }) => {
             </div>
             <div className="detail-right">
                 <h2>{group.name}</h2>
-                <h3>{group.city}, {group.state}</h3>
+                <h3>{group.city || ''}, {group.state || ''}</h3>
                 <div className="detail-num-events">
                     <span>{NumofEvents} Events</span>
                     <span>· {group.type}</span>

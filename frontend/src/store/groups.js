@@ -132,7 +132,10 @@ export const changeGroupDetails = (payload, groupId) => async (dispatch) => {
 export const removeGroup = (groupId) => async (dispatch) => {
     const res = await csrfFetch(`/api/groups/${groupId}`, {
         method: 'DELETE'
-    })
+    });
+
+    dispatch(removeGroup(groupId));
+
 }
 
 // custom selectors
