@@ -3,6 +3,7 @@ import { csrfFetch } from "./csrf";
 const ALL_EVENTS = 'events/ALL_EVENTS';
 const ONE_EVENT = 'events/ONE_EVENT';
 const ADD_EVENT = 'events/ADD_EVENT';
+const DELETE_GROUP = 'events/DELETE_GROUP';
 
 const loadEvents = (payload) => ({
     type: ALL_EVENTS,
@@ -19,6 +20,10 @@ const addEvent = (payload) => ({
     payload
 });
 
+const deleteEvent = (eventId) => ({
+    type: DELETE_GROUP,
+    eventId
+});
 
 // thunks
 export const getEvents = () => async (dispatch) => {
@@ -84,6 +89,14 @@ export const createEvent = (payload,groupId) => async (dispatch) => {
     return data;
 }
 
+export const removeEvent = (eventId) => async (dispatch) => {
+    const res = csrfFetch(`/api/events/${eventId}`, {
+        method: 'DELETE'
+    })
+    
+    // dispatch(removeEvent(eventId))
+};
+
 
 // selectors.js
 import { createSelector } from 'reselect';
@@ -136,6 +149,11 @@ const eventsReducer = (state = initialState, action) => {
                     [newEvent.id]: newEvent
                 }
             };
+        }
+        case DELETE_GROUP: {
+            const newState = {...state};
+            delete newState.allEvents[action.eventId];
+            return newState
         }
         default:
             return state;
