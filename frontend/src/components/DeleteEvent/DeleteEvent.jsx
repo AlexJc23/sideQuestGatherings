@@ -2,7 +2,7 @@
 import { useModal } from "../../context/Modal";
 import { useDispatch } from "react-redux";
 import { removeEvent } from "../../store/events";
-
+import './DeleteEvent.css'
 
 const DeleteEvent = ({eventId, navigate, groupId}) => {
     const dispatch = useDispatch();
@@ -23,11 +23,13 @@ const DeleteEvent = ({eventId, navigate, groupId}) => {
 
     console.log(eventId)
     return (
-        <div id="delete-grp">
+        <div className="dlt-modal">
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this Event?</p>
-            <button onClick={deleteEvent}>Yes (Delete Event)</button>
-            <button onClick={keepEvent}>No (Keep Event)</button>
+            <div className="delete-btns">
+                <button className="remove" onClick={deleteEvent}>Yes (Delete Event)</button>
+                <button  className="keep" onClick={keepEvent}>No (Keep Event)</button>
+            </div>
         </div>
     );
 };

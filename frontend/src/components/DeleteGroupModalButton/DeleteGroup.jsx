@@ -21,13 +21,15 @@ const DeleteGroup = ({groupId, navigate}) => {
         closeModal();
     }
 
-    console.log(groupId)
+
     return (
-        <div id="delete-grp">
+        <div className="dlt-modal">
             <h1>Confirm Delete</h1>
             <p>Are you sure you want to remove this group?</p>
-            <button onClick={deleteGroup}>Yes (Delete Group)</button>
-            <button onClick={keepGroup}>No (Keep Group)</button>
+            <div className="delete-btns">
+                <button className="remove" onClick={deleteGroup}>Yes (Delete Group)</button>
+                <button className="keep" onClick={keepGroup}>No (Keep Group)</button>
+            </div>
         </div>
     );
 };

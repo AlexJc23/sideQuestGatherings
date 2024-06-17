@@ -68,10 +68,10 @@ export const createEvent = (payload,groupId) => async (dispatch) => {
     }
 
     const data = await res.json();
-    console.log('datatattata   ', data)
+
     let image = {
         eventId: data.id,
-            imageUrl: payload.url,
+            url: payload.url,
             preview: true
     }
     try {

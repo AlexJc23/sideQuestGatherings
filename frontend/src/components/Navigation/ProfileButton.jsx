@@ -6,6 +6,7 @@ import OpenModalMenuItem from './OpenModalMenuItem';
 import LoginFormModal from '../LoginFormModal';
 import SignupFormModal from '../SignupFormModal';
 import { BsChevronDown, BsChevronUp } from "react-icons/bs";
+import { NavLink } from 'react-router-dom';
 
 function ProfileButton({ user }) {
   const dispatch = useDispatch();
@@ -53,9 +54,10 @@ function ProfileButton({ user }) {
       <ul className={ulClassName} ref={ulRef}>
         {user ? (
           <>
-            <li>{user.username}</li>
-            <li>{user.firstName} {user.lastName}</li>
+            <li>Hello, {user.firstName}</li>
             <li>{user.email}</li>
+            <div className='pfp-divider' style={{backgroundColor: '#01558a5c', width: '180px', height: '2px', margin: '10px 0'}}></div>
+            <li><NavLink id='strt-grp' to={`/groups/new`}>Start a new group</NavLink></li>
             <li onClick={logout}>Log Out</li>
           </>
         ) : (
