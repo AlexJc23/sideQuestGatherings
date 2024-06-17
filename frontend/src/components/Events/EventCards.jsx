@@ -14,6 +14,7 @@ const EventCards = ({ event }) => {
         }
     }, [dispatch, event.id, eventDetail]);
 
+    
 
 
     return (
@@ -25,8 +26,8 @@ const EventCards = ({ event }) => {
                     </div>
                     <div className="event-right">
                         <h3>{event.startDate}</h3>
-                        <h2>{event.name}</h2>
-                        <p>{event.Venue.city}, {event.Venue.state}</p>
+                        <h2>{event.name }</h2>
+                        <p>{'' || event.Venue.city}, {'' || event.Venue.state}</p>
                     </div>
                 </div>
                     <div className="event-card-btm">

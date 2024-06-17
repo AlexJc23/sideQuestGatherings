@@ -34,13 +34,19 @@ function LoginFormModal() {
     );
   };
 
+  const handleDemo = (e) => {
+
+    return dispatch(sessionActions.login({ credential: 'TestUser1', password: 'password1' }))
+      .then(closeModal);
+  }
+
 
 
   return (
     <div className='login-form'>
       <img className='login-img' src='/BlueLogo.svg'/>
       <h1 className='header-login'>Log In</h1>
-      {newErr && <p>{newErr.message}</p>}
+      {newErr && <p className='errors' >{newErr.message}</p>}
       <form onSubmit={handleSubmit}>
         <section className='form-input'>
           <label className='s'>
@@ -68,6 +74,7 @@ function LoginFormModal() {
         </section>
 
         <button disabled={Object.keys(errors).length} type="submit">Log In</button>
+        <button onClick={handleDemo} type="submit">Demo Log In</button>
       </form>
     </div>
   );

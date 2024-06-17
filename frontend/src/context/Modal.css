@@ -20,7 +20,8 @@
   }
 
   #modal-content {
+    border-radius: 10px;
     position: fixed;
     background-color: white;
-  
+
   }

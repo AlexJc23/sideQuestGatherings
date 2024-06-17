@@ -76,6 +76,14 @@
     text-decoration: none;
     color: #FABA55;
 }
+.disabled {
+    text-decoration: none;
+    color: #01558a5c;
+}
+.disabled:hover {
+    text-decoration: none;
+    color: #01558a5c;
+}
 
 /* section 4 */
 .sctn4 {

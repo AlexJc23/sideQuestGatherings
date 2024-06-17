@@ -91,7 +91,7 @@ const CreateEvent = () => {
         <form id="event-form" onSubmit={handleSubmit}>
                 <h1>Create an event for {group.name}</h1>
             <section className="form-section">
-                <label>What is the name of your group?</label>
+                <label>What is the name of your event?</label>
                 <input type="text" value={name} onChange={handleName}/>
                 {errors.name && <p className="errors">{'*' + errors.name}</p>}
                 {systemError.name && <p className="errors">{'*' + systemError.name}</p>}

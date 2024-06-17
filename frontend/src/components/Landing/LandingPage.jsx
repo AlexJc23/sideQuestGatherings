@@ -3,7 +3,16 @@ import OpenModalButton from '../OpenModalButton/OpenModalButton'
 import './LandPage.css';
 import SignupFormModal from "../SignupFormModal";
 
+import { useSelector } from "react-redux";
+
+
+
 const LandingPage = () => {
+
+    const user = useSelector(state => state.session.user);
+
+    const joinGroup = !user ? '' : 'none';
+
     return (
         <div className="landing">
             <div className='sect1'>
@@ -16,7 +25,7 @@ const LandingPage = () => {
                 </div>
             </div>
             <div className='sect2'>
-                <h2>How Meetup works</h2>
+                <h2>How Side Quest gatherings works</h2>
                 <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus.</p>
             </div>
             <div className='sect3'>
@@ -40,15 +49,21 @@ const LandingPage = () => {
                 </div>
                 <div className='sect3-sqr'>
                     <img src='/creategroup.png'/>
-                    <NavLink to="/groups/new" className='sect3-navlink'>
-                        Start a new group
-                    </NavLink>
+                    {user ? (
+                        <NavLink to="/groups/new" className='sect3-navlink'>
+                            Start a new group
+                        </NavLink>
+                    ) : (
+                        <span className='sect3-navlink disabled'>
+                            Start a new group
+                        </span>
+                    )}
                     <p>
                     consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Elit scelerisque mauris pellentesque pulvinar pellentesque habitant morbi tristique senectus.
                     </p>
                 </div>
             </div>
-            <div className="sctn4">
+            <div className="sctn4" style={{display: `${joinGroup}`}}>
                 <OpenModalButton
                     buttonText={'Join Side Quest Gatherings'}
                     modalComponent={<SignupFormModal />}
