@@ -32,6 +32,7 @@ const GroupMain = () => {
                 ))}
 
             </div>
+                
 
         </div>
     )

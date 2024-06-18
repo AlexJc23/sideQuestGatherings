@@ -33,7 +33,9 @@ const GroupCards = ({ group }) => {
         : './BlueMonogramLogo.svg';
 
     const separateGroup = (
+        <>
         <NavLink key={group.id} to={`/groups/${group.id}`} className="group-card">
+
             <div className="group-left">
                 <img className="group-img" src={lastImage} alt="group picture" />
             </div>
@@ -47,6 +49,8 @@ const GroupCards = ({ group }) => {
                 </div>
             </div>
         </NavLink>
+            <div className='spacer1'></div>
+            </>
     );
 
     return (
