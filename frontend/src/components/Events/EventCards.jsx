@@ -14,9 +14,6 @@ const EventCards = ({ event }) => {
         }
     }, [dispatch, event.id, eventDetail]);
 
-    
-
-
     return (
         <>
             <NavLink key={event.id} to={`/events/${event.id}`} className="event-card">
@@ -26,15 +23,14 @@ const EventCards = ({ event }) => {
                     </div>
                     <div className="event-right">
                         <h3>{event.startDate}</h3>
-                        <h2>{event.name }</h2>
-                        <p>{'' || event.Venue.city}, {'' || event.Venue.state}</p>
+                        <h2>{event.name}</h2>
+                        <p>{event.Venue ? `${event.Venue.city}, ${event.Venue.state}` : 'Location not available'}</p>
                     </div>
                 </div>
-                    <div className="event-card-btm">
-                        <span className='event-about'>{eventDetail ? eventDetail.description : 'Loading description...'}</span>
-                    </div>
+                <div className="event-card-btm">
+                    <span className='event-about'>{eventDetail ? eventDetail.description : 'Loading description...'}</span>
+                </div>
             </NavLink>
-            {/* <div className='spacers'></div> */}
         </>
     );
 };

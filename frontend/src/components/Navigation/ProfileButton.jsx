@@ -58,7 +58,7 @@ function ProfileButton({ user }) {
             <li>{user.email}</li>
             <div className='pfp-divider' style={{backgroundColor: '#01558a5c', width: '180px', height: '2px', margin: '10px 0'}}></div>
             <li><NavLink id='strt-grp' to={`/groups/new`}>Start a new group</NavLink></li>
-            <li onClick={logout}>Log Out</li>
+            <li onClick={logout}><NavLink to='/'>Log Out</NavLink></li>
           </>
         ) : (
           <>
