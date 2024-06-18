@@ -137,7 +137,7 @@ const EditGroup = () => {
                 </div>
                 <div>
                     <label>
-                        Please add an image url for your group below:
+                       Optional: Please add an image url for your group below:
                     </label>
                     <input type='text' value={url} onChange={handleUrl} placeholder="Image Url"></input>
                 </div>

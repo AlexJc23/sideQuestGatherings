@@ -39,6 +39,11 @@ const GroupDetailsCard = ({ group }) => {
 
     const owner = user && group.organizerId == user.id ? '' : 'none';
     const nonOwner = !user || group.organizerId != user.id ? '' : 'none';
+    const notLoggedIn = !user ? 'none' : '';
+
+    const handleJoinBtn = () => {
+        alert('Feature coming soon')
+    };
 
     const groupCard = (
         <div className="details-card">
@@ -61,7 +66,10 @@ const GroupDetailsCard = ({ group }) => {
                     <span>Organized by {group.Organizer.firstName} {group.Organizer.lastName}</span>
                 </div>
                 <div className='join-group-btn' >
-                    <NavLink to={``} style={{display: `${nonOwner}`}}><button className="create-event-btn" >Join Group</button></NavLink>
+                    <div style={{ display: `${notLoggedIn}`}}>
+
+                    <NavLink to={``} onClick={handleJoinBtn} style={{display: `${nonOwner}`}}><button className="create-event-btn" >Join Group</button></NavLink>
+                    </div>
                     <NavLink to={`/groups/${group.id}/events/new`} style={{display: `${owner}`}}><button className="create-event-btn" >Create Event</button></NavLink>
                     <NavLink to={`/groups/${group.id}/edit`} style={{display: `${owner}`}}><button className="create-event-btn" >Update</button></NavLink>
                     <div style={{display: `${owner}`}}>

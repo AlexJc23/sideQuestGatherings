@@ -92,7 +92,7 @@ const CreateEvent = () => {
                 <h1>Create an event for {group.name}</h1>
             <section className="form-section">
                 <label>What is the name of your event?</label>
-                <input type="text" value={name} onChange={handleName}/>
+                <input type="text" value={name} onChange={handleName} placeholder="Event Name"/>
                 {errors.name && <p className="errors">{'*' + errors.name}</p>}
                 {systemError.name && <p className="errors">{'*' + systemError.name}</p>}
             </section>
@@ -144,12 +144,12 @@ const CreateEvent = () => {
             </section>
             <section className="form-section">
                 <label>Please add an image url for your event below:</label>
-                <input type="text" value={url} onChange={handleUrl}></input>
+                <input type="text" value={url} onChange={handleUrl} placeholder="Image URL"></input>
                 {errors.url && <p className="errors">{'*' + errors.url}</p>}
             </section>
             <section className="form-section">
                 <label>Please describe your event:</label>
-                <textarea type="text" value={about} onChange={handleAbout}></textarea>
+                <textarea type="text" value={about} onChange={handleAbout} placeholder="Please include at least 30 characters"></textarea>
                 {errors.about && <p className="errors">{'*' + errors.about}</p>}
             </section>
             <button className='submit-btn' type="submit">Create Event</button>
