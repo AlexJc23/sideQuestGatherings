@@ -26,7 +26,7 @@ module.exports = {
     */
     await Event.bulkCreate([
       {
-        groupId: 1,
+        groupId: 5,
         venueId: 1,
         name: 'Epic Gaming Tournament',
         type: 'Online',
@@ -37,7 +37,7 @@ module.exports = {
         endDate: '2024-10-01 18:00:00',
       },
       {
-        groupId: 2,
+        groupId: 1,
         venueId: 2,
         name: 'Board Game Night Extravaganza',
         type: 'In Person',
@@ -48,7 +48,7 @@ module.exports = {
         endDate: '2024-10-05 23:00:00',
       },
       {
-        groupId: 3,
+        groupId: 2,
         venueId: 3,
         name: 'Dungeons & Dragons One-Shot Adventure',
         type: 'In Person',
@@ -59,7 +59,7 @@ module.exports = {
         endDate: '2024-10-10 22:00:00',
       },
       {
-        groupId: 1,
+        groupId: 4,
         venueId: 1,
         name: 'Magic: The Gathering Casual Play',
         type: 'Online',
@@ -70,7 +70,7 @@ module.exports = {
         endDate: '2024-10-12 20:00:00',
       },
       {
-        groupId: 2,
+        groupId: 10,
         venueId: 2,
         name: 'Video Game Night - Retro Classics',
         type: 'In Person',
