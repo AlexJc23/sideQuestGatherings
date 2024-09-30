@@ -47,9 +47,93 @@ module.exports = {
       username: 'TestUser3',
       email: 'testuser3@gmail.com',
       hashedPassword: bcrypt.hashSync('password3')
+    },
+    {
+      firstName: 'Alice',
+      lastName: 'Smith',
+      username: 'AliceSmith1',
+      email: 'alice.smith@gmail.com',
+      hashedPassword: bcrypt.hashSync('alicePass1')
+    },
+    {
+      firstName: 'John',
+      lastName: 'Doe',
+      username: 'JohnDoe21',
+      email: 'john.doe21@gmail.com',
+      hashedPassword: bcrypt.hashSync('johnPass21')
+    },
+    {
+      firstName: 'Sara',
+      lastName: 'Connor',
+      username: 'TerminatorFan',
+      email: 'sara.connor@gmail.com',
+      hashedPassword: bcrypt.hashSync('connor1234')
+    },
+    {
+      firstName: 'Michael',
+      lastName: 'Jordan',
+      username: 'MJ23',
+      email: 'mjordan23@gmail.com',
+      hashedPassword: bcrypt.hashSync('jumpman23')
+    },
+    {
+      firstName: 'Emily',
+      lastName: 'Brown',
+      username: 'EmilyB',
+      email: 'emily.brown@yahoo.com',
+      hashedPassword: bcrypt.hashSync('brownie456')
+    },
+    {
+      firstName: 'David',
+      lastName: 'Miller',
+      username: 'DavidM',
+      email: 'david.miller@hotmail.com',
+      hashedPassword: bcrypt.hashSync('david321')
+    },
+    {
+      firstName: 'Linda',
+      lastName: 'Jones',
+      username: 'LindaJ89',
+      email: 'linda.jones@gmail.com',
+      hashedPassword: bcrypt.hashSync('joneslinda')
+    },
+    {
+      firstName: 'Chris',
+      lastName: 'Evans',
+      username: 'CaptainAmerica',
+      email: 'chris.evans@aol.com',
+      hashedPassword: bcrypt.hashSync('americaCap')
+    },
+    {
+      firstName: 'Sophia',
+      lastName: 'Williams',
+      username: 'SophiaW',
+      email: 'sophia.williams@gmail.com',
+      hashedPassword: bcrypt.hashSync('will2023')
+    },
+    {
+      firstName: 'James',
+      lastName: 'Anderson',
+      username: 'JamesA',
+      email: 'james.anderson@gmail.com',
+      hashedPassword: bcrypt.hashSync('andersonjames')
+    },
+    {
+      firstName: 'Olivia',
+      lastName: 'Taylor',
+      username: 'LivTaylor',
+      email: 'olivia.taylor@gmail.com',
+      hashedPassword: bcrypt.hashSync('tay123liv')
+    },
+    {
+      firstName: 'Robert',
+      lastName: 'Downey',
+      username: 'IronMan',
+      email: 'robert.downey@gmail.com',
+      hashedPassword: bcrypt.hashSync('stark3000')
     }
-   ], {validate: true})
-  },
+  ], {validate: true});
+},
 
   async down (queryInterface, Sequelize) {
     /**

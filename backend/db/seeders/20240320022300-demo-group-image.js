@@ -25,23 +25,43 @@ module.exports = {
     */
    await GroupImage.bulkCreate([
     {
-      groupId: 1,
-      imageUrl: 'https://images.pexels.com/photos/1670977/pexels-photo-1670977.jpeg',
+      groupId: 6,
+      imageUrl: 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhmOVs3w1oPPqk6zwBKMYiBssRUQXtUzXgF00zXTc_U3QfOSObJhucY5tIDzPmFYvjjlVSYpnY5IfzIvw275qymAJSjDpQnTMMrvI11gahmJyWg1UyQ4pwdWTCelPVuKseu2BYcyg/s1600/board-games-for-kids-ages-6-to-12.jpg',
       preview: true
     },
     {
-      groupId: 1,
-      imageUrl: 'https://images.pexels.com/photos/260024/pexels-photo-260024.jpeg',
+      groupId: 7,
+      imageUrl: 'https://i.imgur.com/RUD8Jbw.jpg',
+      preview: true
+    },
+    {
+      groupId: 8,
+      imageUrl: 'https://assetsio.gnwcdn.com/mtg-modern-horizons-2-cards.png',
+      preview: true
+    },
+    {
+      groupId: 9,
+      imageUrl: 'https://www.harrisburgu.edu/wp-content/uploads/table-top-games-1183x686.jpg',
+      preview: true
+    },
+    {
+      groupId: 10,
+      imageUrl: 'https://www.xcoser.com/cdn/shop/articles/top-10-cosplay-ideas-for-guys-in-2020-699988_800x.jpg',
       preview: false
     },
     {
-      groupId: 3,
-      imageUrl: 'https://images.pexels.com/photos/4004426/pexels-photo-4004426.jpeg',
+      groupId: 11,
+      imageUrl: 'https://www.orcnroll.com/wp-content/uploads/2019/10/image.jpeg',
       preview: true
     },
     {
-      groupId: 2,
-      imageUrl: 'https://images.pexels.com/photos/23092004/pexels-photo-23092004/free-photo-of-famous-billiard-club-811-in-moscow-atmosphere-inside.jpeg',
+      groupId: 12,
+      imageUrl: 'https://www.brightful.me/content/images/2021/06/4-3.jpg',
+      preview: true
+    },
+    {
+      groupId: 13,
+      imageUrl: 'https://miro.medium.com/v2/resize:fit:1400/1*jczW72gjOU2T_WG69L7U0A.png',
       preview: true
     }
    ], {validate: true})

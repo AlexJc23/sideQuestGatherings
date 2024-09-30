@@ -28,23 +28,28 @@ module.exports = {
     await EventImage.bulkCreate([
       {
         eventId: 1,
-        imageUrl: 'https://images.pexels.com/photos/1601774/pexels-photo-1601774.jpeg',
-        preview: true,
-      },
-      {
-        eventId: 1,
-        imageUrl: 'https://images.pexels.com/photos/4841182/pexels-photo-4841182.jpeg',
-        preview: true,
-      },
-      {
-        eventId: 3,
-        imageUrl: 'https://images.pexels.com/photos/20551826/pexels-photo-20551826/free-photo-of-facade-of-a-postindustrial-building-with-a-venue.jpeg',
+        imageUrl: 'https://toomanygames.com/wp-content/uploads/2023/05/Video-Game-Tournaments-at-TooManyGames-East-Coast-Gaming-Convention-Greater-Philadelphia-Expo-Center.png',
         preview: true,
       },
       {
         eventId: 2,
-        imageUrl: 'https://images.pexels.com/photos/10543176/pexels-photo-10543176.jpeg',
-        preview: false,
+        imageUrl: 'https://images.squarespace-cdn.com/content/v1/5a2af6428c56a8d78df97ef4/1519073875402-DNNDY6NZDX6YXR860MBR/IMG_5961.jpg',
+        preview: true,
+      },
+      {
+        eventId: 3,
+        imageUrl: 'https://parental-control.flashget.com/wp-content/uploads/sites/3/2024/07/Overview-of-dnd-for-kids.jpg',
+        preview: true,
+      },
+      {
+        eventId: 4,
+        imageUrl: 'https://static1.thegamerimages.com/wordpress/wp-content/uploads/2023/04/featuredimage-magicranked.jpg',
+        preview: true,
+      },
+      {
+        eventId: 5,
+        imageUrl: 'https://www.bazaar-bazaar.co.uk/cdn/shop/collections/retro_game_wallpaper.jpg',
+        preview: true,
       },
     ], {validate: true})
   },
